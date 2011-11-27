@@ -1,10 +1,16 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world)])
+  (:import (thrive.actors Person))
   (:use seesaw.core)
   (:use seesaw.graphics)
   (:use seesaw.color))
   
 (def cell-size 50)
+(def cell-half-size (/ cell-size 2))
+
+(defprotocol Paintable
+  "Defines something paintable"
+  (paint [this g] "How something gets painted"))
 
 (def tiles 
 {
@@ -15,15 +21,26 @@
     :unknown  {:color (color "black")}
 })
 
+(extend-type Person
+  Paintable
+  (paint [this g]
+    (do
+      (.setColor g (color "pink"))
+      (.fillRect g (+ (* cell-size (:x this)) (/ cell-half-size 2)) (+ (* cell-size (:y this)) (/ cell-half-size 2)) cell-half-size cell-half-size))))
+
 (defn paint-world 
   "Paints the world.
    c = The canvas on which to paint
    g = The graphics2D context"
   [c g]
-  (doseq [cell (:cells @world)]
-    (.setColor g ((tiles (:tile cell)) :color))
-    (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)))
-
+  (do
+    (doseq [cell (:cells @world)]
+      (.setColor g ((tiles (:tile cell)) :color))
+      (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size))
+    
+    (doseq [actor (:actors @world)]
+      (paint @actor g))))
+       
 (defn make-ui
   [on-close]
   (frame 
@@ -49,5 +66,5 @@
       show!)))
 
 (defn -main [& args]
-  (app :nothing))
+  (app :exit))
             

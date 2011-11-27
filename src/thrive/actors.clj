@@ -2,7 +2,7 @@
   (:gen-class))
 
 (defprotocol Actor
-"Defines what an Actor should respond to."
+  "Defines what an Actor should respond to."
   (live     [this] "The live method, IE what the actor does")
   (interval [this] "The interval in which the actor performs live"))
 
