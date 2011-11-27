@@ -11,7 +11,8 @@
     :sea      {:color (color "blue")},
     :grass    {:color (color "green")},
     :lava     {:color (color "red")},
-    :mountain {:color (color "gray")}
+    :mountain {:color (color "gray")},
+    :unknown  {:color (color "black")}
 })
 
 (defn paint-world 
@@ -19,8 +20,7 @@
    c = The canvas on which to paint
    g = The graphics2D context"
   [c g]
-  (doseq [cell @world]
-    (println "repaint")
+  (doseq [cell (:cells @world)]
     (.setColor g ((tiles (:tile cell)) :color))
     (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)))
 
@@ -49,5 +49,5 @@
       show!)))
 
 (defn -main [& args]
-  (app :exit))
+  (app :nothing))
             
