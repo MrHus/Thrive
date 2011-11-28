@@ -20,7 +20,7 @@
   y 	  ;; The y position on the world
   z	    ;; The z position on the world, is equal to height of the tile.
   food  ;; The current food this person is carrying.
-  w     ;; The current world as this person sees it.
+  world ;; The current world as this person sees it.
 ]
   Actor
   (live 
