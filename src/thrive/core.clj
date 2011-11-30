@@ -1,6 +1,7 @@
 (ns thrive.core
-  (:use thrive.actors)
-  (:import (thrive.actors Person))
+  (:use thrive.actor)
+  (:require [thrive.person :only (Person)])
+  (:import (thrive.person Person))
   (:gen-class))
 
 ;;;;;;; Records ;;;;;;;
@@ -15,8 +16,6 @@
 ])
 
 ;;;;;;; References ;;;;;;;
-
-(def world-width-height 3)
 
 (def unknown-world
   [(Cell. 0 0 0 :unknown 0), (Cell. 1 0 0 :unknown 0), (Cell. 2 0 0 :unknown 0), 
@@ -34,7 +33,7 @@
   }))
 
 (defn live-world
-  [w]  
-  (doseq [actor (:actors w)]
-    (send-off actor loop-actor)))
-      
+  "Sets the actors in motion."
+  []  
+  (doseq [actor (:actors @world)]
+    (send-off actor loop-actor world)))    

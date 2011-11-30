@@ -1,10 +1,12 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world)])
-  (:import (thrive.actors Person))
+  (:require [thrive.person :only (Person)])
+  (:import (thrive.person Person))
   (:import (java.awt.event MouseEvent))
   (:use seesaw.core)
   (:use seesaw.graphics)
-  (:use seesaw.color))
+  (:use seesaw.color)
+  (:gen-class))
   
 (def cell-size 50)
 (def cell-half-size (/ cell-size 2))
