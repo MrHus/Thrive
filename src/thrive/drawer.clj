@@ -1,5 +1,5 @@
 (ns thrive.drawer
-  (:use [thrive.core :only (world)])
+  (:use [thrive.core :only (world live-world)])
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
   (:import (java.awt.event MouseEvent))
@@ -110,12 +110,16 @@
     (listen root   :mouse-clicked  detect-hit-on-actor))
   root)
 
-(defn app [on-close]
+(defn app 
+  [on-close]
   (invoke-later
     (-> (make-ui on-close)
       add-behaviors 
       show!)))
 
-(defn -main [& args]
-  (app :exit))
+(defn -main 
+  [& args]
+  (do
+    (live-world)
+    (app :exit)))
             
