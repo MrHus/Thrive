@@ -1,7 +1,7 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world)])
-  (:require [thrive.person :only (Person)])
-  (:import (thrive.person Person))
+  (:require [thrive.human :only (Human)])
+  (:import (thrive.human Human))
   (:import (java.awt.event MouseEvent))
   (:use seesaw.core)
   (:use seesaw.graphics)
@@ -24,7 +24,7 @@
     :unknown  {:color (color "black")}
 })
 
-(extend-type Person
+(extend-type Human
   Paintable
   (paint [this g]
     (do

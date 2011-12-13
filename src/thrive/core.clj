@@ -1,7 +1,7 @@
 (ns thrive.core
   (:use thrive.actor)
-  (:require [thrive.person :only (Person)])
-  (:import (thrive.person Person))
+  (:require [thrive.human :only (Human)])
+  (:import (thrive.human Human))
   (:gen-class))
 
 ;;;;;;; Records ;;;;;;;
@@ -29,7 +29,7 @@
      (Cell. 0 2 0 :sea 0), (Cell. 1 2 0 :mountain 0), (Cell. 2 2 0 :lava 0)]
    
    :actors
-    [(agent (Person. 0 1 0 5 unknown-world))]
+    [(agent (Human. 0 1 0 5 unknown-world))]
   }))
 
 (defn live-world
