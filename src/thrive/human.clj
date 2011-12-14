@@ -1,7 +1,15 @@
 (ns thrive.human
   (:use thrive.actor)
   (:gen-class))
-
+  
+(defrecord Human
+[
+  x 	  ;; The x position on the world 
+  y 	  ;; The y position on the world
+  z	    ;; The z position on the world, is equal to height of the tile.
+  food  ;; The current food this person is carrying.
+  world ;; The current world as this person sees it.
+])
 (def world-width-height 3)
 
 (defn find-cells
@@ -33,24 +41,16 @@
 (defn observe
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
-  [^Person p, actual-world]
+  [^Human p, actual-world]
   (let [observed-cells (find-cells actual-world (neighbors (:x p) (:y p)))
         p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
 (defn live-human
   "A human first observers his surroundings than makes a move."
-  [^Person p, actual-world]
+  [^Human p, actual-world]
   (observe p actual-world))
-  
-(defrecord Human
-[
-  x 	  ;; The x position on the world 
-  y 	  ;; The y position on the world
-  z	    ;; The z position on the world, is equal to height of the tile.
-  food  ;; The current food this person is carrying.
-  world ;; The current world as this person sees it.
-]
+(extend-type Human
   Actor
   (live [this world] (live-human this (:cells @world)))
-  (interval [this] 1000))  
+  (interval [this] 1000))
