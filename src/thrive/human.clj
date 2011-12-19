@@ -30,19 +30,26 @@
   [actual-world coll]
   (map #(nth actual-world %) (map #(+ (:x %) (* world-width-height (:y %))) coll)))
 
-(defn neighbors
-  "Gets the neighbors of a cell, but within the bounds of the world.
-   Returns [{:x, :y} ...] of all cells that are neighbors (up, down, left, right)"
-  [x, y]
+;; What is visible by the Person format is [x, y]
+(def visibility-matrix
+	[[0 0] [-1 0] [1 0] [0 -1] [0 1]])
+
+(defn visibles
+  "Gets the visible cell's of a specific cell, but within the bounds of the world.
+   Returns [{:x, :y} ...] of all cells that are visible"
+  [x, y, bounds]
   (filter
-    #(and (>= (:x %) 0) (< (:x %) world-width-height) (>= (:y %) 0) (< (:y %) world-width-height))
-    [{:x x, :y y}, {:x (dec x), :y y}, {:x (inc x), :y y}, {:x x, :y (dec y)}, {:x x, :y (inc y)}]))
+    #(and (>= (:x %) 0) (< (:x %) bounds) (>= (:y %) 0) (< (:y %) bounds))
+	(map 
+		#(let [dx (first %)
+			     dy (last %)]
+			  {:x (+ x dx) :y (+ y dy)}) visibility-matrix)))
 	
 (defn observe
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
   [^Human p, actual-world]
-  (let [observed-cells (find-cells actual-world (neighbors (:x p) (:y p)))
+  (let [observed-cells (find-cells actual-world (visibles (:x p) (:y p) world-width-height))
         p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
