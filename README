@@ -3,6 +3,8 @@
 FIXME: write description
 
 ## Usage
+(require 'thrive.drawer)
+(thrive.drawer/-main)
 
 FIXME: write
 

@@ -53,10 +53,11 @@
         p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
-(defn live-human
+(defn ^Human live-human
   "A human first observers his surroundings than makes a move."
   [^Human p, actual-world]
-  (observe p actual-world))
+  (observe p actual-world)
+  (move p))
   
 (extend-type Human
   Actor
