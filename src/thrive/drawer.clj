@@ -122,4 +122,6 @@
   (do
     (live-world)
     (app :exit)))
+
+(-main)
             

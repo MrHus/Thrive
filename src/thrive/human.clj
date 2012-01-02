@@ -53,11 +53,19 @@
         p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
+(defn ^Human move
+  "A human moves to the right every loop. Need to update that user uses algorithm"
+  [^Human p]
+  (let [p-x (+ :x 1)]
+  (assoc p :x p-x)))
+
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
-  [^Human p, actual-world]
-  (observe p actual-world)
-  (move p))
+  [^Human p, actual-world] 
+     (do
+       (observe p actual-world)
+       (println p " \nd")
+       (move p)))
   
 (extend-type Human
   Actor
