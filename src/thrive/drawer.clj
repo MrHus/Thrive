@@ -21,6 +21,8 @@
     :grass    {:color (color "green")},
     :lava     {:color (color "red")},
     :mountain {:color (color "gray")},
+    :meat     {:color (color "brown")},
+    :city     {:color (color "purple")},
     :unknown  {:color (color "black")}
 })
 
