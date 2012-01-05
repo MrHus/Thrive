@@ -17,10 +17,12 @@
 
 ;;;;;;; References ;;;;;;;
 
-(def unknown-world
-  [(Cell. 0 0 0 :unknown 0), (Cell. 1 0 0 :unknown 0), (Cell. 2 0 0 :unknown 0), 
-   (Cell. 0 1 0 :unknown 0), (Cell. 1 1 0 :unknown 0), (Cell. 2 1 0 :unknown 0),
-   (Cell. 0 2 0 :unknown 0), (Cell. 1 2 0 :unknown 0), (Cell. 2 2 0 :unknown 0)])
+(defn generate-unkown-world
+	"Generates an uknown square world the size is determined by the first argument"
+	[size]
+	(map #(Cell. (mod % size) (int (/ % size)) 0 :unknown 0) (range (* size size))))
+
+(def unknown-world (generate-unkown-world 3))
 
 (def world (ref 
   {:cells 
