@@ -53,16 +53,33 @@
         p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
-(defn found-food
+(defn search-locations-with-food
   [world]
-  (if (empty? world) false (if (> (:food (first world)) 0) true (found-meat (rest world)))))
+  (if (empty? world) '() (if (> (:food (first world)) 0) (cons (first world) (search-locations-with-food (rest world)))  (search-locations-with-food (rest world)))))
+
+(defn closed-location
+  "find closed location to the human"
+  [locations, p]
+  (let [first-location (first locations) second-location (second locations)]
+    first-location))
+
+(defn ?
+  [a]
+  (if (> a 0)
+    1
+    (if (< a 0)
+      -1
+      0)))
 
 (defn ^Human walk
   "A human moves to the right every loop. Need to update that user uses algorithm"
   [^Human p]
-  (println (found-food (:world p)))
-  (let [p-x (+ (:x p) 1)] 
-     (assoc p :x p-x)))
+  (let [locations (search-locations-with-food (:world p))]
+    (if (> (count locations) 0)
+      (let [closed-location (closed-location locations p) p-x (+ (:x p) (?(- (:x closed-location) (:x p)))) p-y (+ (:y p) (?(- (:y closed-location) (:y p))))]
+        (assoc (assoc p :x p-x) :y p-y))
+      (let [p-x (+ (:x p) 1)]
+        (assoc p :x p-x)))))
 
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
