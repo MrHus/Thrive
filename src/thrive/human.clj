@@ -55,7 +55,13 @@
 
 (defn found-food
   [world]
-  (if (empty? world) false (if (> (:food (first world)) 0) true (found-meat (rest world)))))
+  (if 
+    (empty? world) 
+	false 
+	(if 
+	  (> (:food (first world)) 0)
+	  true 
+	  false)))
 
 (defn ^Human walk
   "A human moves to the right every loop. Need to update that user uses algorithm"
@@ -67,7 +73,7 @@
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
   [^Human p, actual-world] 
-       (walk (observe p actual-world)))
+    (walk (observe p actual-world)))
   
 (extend-type Human
   Actor

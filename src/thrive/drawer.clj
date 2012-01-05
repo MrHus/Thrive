@@ -21,7 +21,6 @@
     :grass    {:color (color "green")},
     :lava     {:color (color "red")},
     :mountain {:color (color "gray")},
-    :meat     {:color (color "brown")},
     :city     {:color (color "purple")},
     :unknown  {:color (color "black")}
 })
@@ -38,7 +37,11 @@
   [c g cells]
   (doseq [cell cells]
     (.setColor g ((tiles (:tile cell)) :color))
-    (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)))
+    (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
+	  (if (not (zero? (:food cell)))
+		  (do
+			  (.setColor g (color "orange"))
+			  (.fillRect g (+ (* cell-size (:x cell)) (/ cell-half-size 2)) (+ (* cell-size (:y cell)) (/ cell-half-size 2)) cell-half-size cell-half-size)))))
 
 (defn paint-world 
   "Paints the world.
