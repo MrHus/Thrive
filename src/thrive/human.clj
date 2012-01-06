@@ -84,7 +84,7 @@
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
   [^Human p, actual-world] 
-    (walk (observe p actual-world)))
+       (walk (observe p actual-world)))
   
 (extend-type Human
   Actor
