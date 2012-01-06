@@ -22,7 +22,12 @@
 	[size]
 	(map #(Cell. (mod % size) (int (/ % size)) 0 :unknown 0) (range (* size size))))
 
-(def unknown-world (generate-unkown-world 3))
+;(def unknown-world (generate-unkown-world 3)) needs updating does not work
+
+(def unknown-world
+  [(Cell. 0 0 0 :unknown 0), (Cell. 1 0 0 :unknown 0), (Cell. 2 0 0 :unknown 0), 
+   (Cell. 0 1 0 :unknown 0), (Cell. 1 1 0 :unknown 0), (Cell. 2 1 0 :unknown 0),
+   (Cell. 0 2 0 :unknown 0), (Cell. 1 2 0 :unknown 0), (Cell. 2 2 0 :unknown 0)])
 
 (def world (ref 
   {:cells 

@@ -127,4 +127,6 @@
   (do
     (live-world)
     (app :exit)))
+
+(-main); I'm not typing it manually every time i want to test
             
