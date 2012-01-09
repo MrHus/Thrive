@@ -13,22 +13,26 @@
 
 (def world-width-height 3)
 
-(defn find-cells
-  "Find all cells in the actual world from the coll, which is a collection of [{:x, :y}]
-   
-   To understand this function lets look at the math:
-   
-   The vector contains each cell at a specific location. For instance in this 2*2 world:
-   [(0, 0), (1, 0), (0, 1), (1, 1)]
-   
-   The formula for getting the 'location' of a cell while knowing the cells x and y is:
+(defn find-cell-loc
+  "The formula for getting the 'location' of a cell while knowing the cells x and y is:
    world-width-height   = 1 = max [x | cell-from-world]
    location(cell)       = cell(y) * world-width-height + cell(x)
    location(cell(1, 1)) = 1 * 2 + 1 = 4
    
    Note that the world has to be a perfect square."
-  [actual-world coll]
-  (map #(nth actual-world %) (map #(+ (:x %) (* world-width-height (:y %))) coll)))
+  [x y world-size]
+  (+ x (* world-size y)))  
+
+(defn find-cell
+  "Returns the cell"
+  [x y actual-world world-size]
+  (nth actual-world (find-cell-loc x y world-size))
+  )
+
+(defn find-cells
+  "Find all cells in the actual world from the coll, which is a collection of [{:x, :y}]"
+  [actual-world coll world-size]
+  (map #(find-cell (:x %) (:y %) actual-world world-size) coll))
 
 ;; What is visible by the Person format is [x, y]
 (def visibility-matrix
@@ -49,13 +53,17 @@
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
   [^Human p, actual-world]
-  (let [observed-cells (find-cells actual-world (visibles (:x p) (:y p) world-width-height))
+  (let [observed-cells (find-cells actual-world (visibles (:x p) (:y p) world-width-height) world-width-height)
         p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
 (defn search-locations-with-food
   [world]
-  (if (empty? world) '() (if (> (:food (first world)) 0) (cons (first world) (search-locations-with-food (rest world)))  (search-locations-with-food (rest world)))))
+  (if (empty? world)
+    '()
+    (if (> (:food (first world)) 0)
+      (cons (first world) (search-locations-with-food (rest world)))
+      (search-locations-with-food (rest world)))))
 
 (defn closed-location
   "find closed location to the human"
@@ -76,7 +84,9 @@
   [^Human p]
   (let [locations (search-locations-with-food (:world p))]
     (if (> (count locations) 0)
-      (let [closed-location (closed-location locations p) p-x (+ (:x p) (?(- (:x closed-location) (:x p)))) p-y (+ (:y p) (?(- (:y closed-location) (:y p))))]
+      (let [closed-location (closed-location locations p)
+            p-x (+ (:x p) (?(- (:x closed-location) (:x p))))
+            p-y (+ (:y p) (?(- (:y closed-location) (:y p))))]
         (assoc (assoc p :x p-x) :y p-y))
       (let [p-x (+ (:x p) 1)]
         (assoc p :x p-x)))))
@@ -85,7 +95,7 @@
   "A human first observers his surroundings than makes a move."
   [^Human p, actual-world] 
        (walk (observe p actual-world)))
-  
+
 (extend-type Human
   Actor
   (live [this world] (live-human this (:cells @world)))
