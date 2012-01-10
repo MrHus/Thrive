@@ -1,8 +1,8 @@
 (ns thrive.test.human
-	(:use [thrive.human])
-	(:use [thrive.core])
-    (:import (thrive.core Cell))
-	(:use [clojure.test]))
+  (:use [thrive.human])
+  (:use [thrive.core])
+  (:import (thrive.core Cell))
+  (:use [clojure.test]))
 
 (def world-size 3)
 

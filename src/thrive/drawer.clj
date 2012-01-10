@@ -2,6 +2,8 @@
   (:use [thrive.core :only (world live-world)])
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
+  (:require [thrive.city :only (City)])
+  (:import (thrive.city City))
   (:import (java.awt.event MouseEvent))
   (:use seesaw.core)
   (:use seesaw.graphics)
@@ -21,16 +23,25 @@
     :grass    {:color (color "green")},
     :lava     {:color (color "red")},
     :mountain {:color (color "gray")},
-    :city     {:color (color "purple")},
     :unknown  {:color (color "black")}
 })
+
+(defn paint-half-block
+  "Paint a half block based on the x and y coordinates"
+  [g x y block-color]
+  (do
+    (.setColor g (color block-color))
+    (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
 
 (extend-type Human
   Paintable
   (paint [this g]
-    (do
-      (.setColor g (color "pink"))
-      (.fillRect g (+ (* cell-size (:x this)) (/ cell-half-size 2)) (+ (* cell-size (:y this)) (/ cell-half-size 2)) cell-half-size cell-half-size))))
+    (paint-half-block g (:x this) (:y this) "pink")))
+    
+(extend-type City
+  Paintable
+  (paint [this g]
+    (paint-half-block g (:x this) (:y this) "purple")))
 
 (defn paint-cells
   "Paint cells"
@@ -38,10 +49,8 @@
   (doseq [cell cells]
     (.setColor g ((tiles (:tile cell)) :color))
     (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
-	  (if (not (zero? (:food cell)))
-		  (do
-			  (.setColor g (color "orange"))
-			  (.fillRect g (+ (* cell-size (:x cell)) (/ cell-half-size 2)) (+ (* cell-size (:y cell)) (/ cell-half-size 2)) cell-half-size cell-half-size)))))
+    (if (not (zero? (:food cell)))
+      (paint-half-block g (:x cell) (:y cell) "orange"))))
 
 (defn paint-world 
   "Paints the world.
@@ -127,5 +136,5 @@
     (live-world)
     (app :exit)))
 
-(-main); I'm not typing it manually every time i want to test
+;;(-main); I'm not typing it manually every time i want to test
             
