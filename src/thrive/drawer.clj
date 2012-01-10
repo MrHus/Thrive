@@ -110,7 +110,6 @@
 (defn add-behaviors
   [root]
   (let [t (timer (fn [_] (repaint! (select root [:#world-canvas]))) :delay 60 :start? true, :repeats? true)]
-    
     (listen root   :window-closing (fn [_] (.stop t)))
     (listen root   :mouse-clicked  detect-hit-on-actor))
   root)
@@ -128,5 +127,5 @@
     (live-world)
     (app :exit)))
 
-;; (-main); I'm not uncommenting this every time I want to test :P
+(-main); I'm not typing it manually every time i want to test
             

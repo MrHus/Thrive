@@ -56,13 +56,10 @@
         p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-width-height) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
-(defn search-locations-with-food
+(defn cells-with-food
+  "Gets all the Cells with food"
   [world]
-  (if (empty? world)
-    '()
-    (if (> (:food (first world)) 0)
-      (cons (first world) (search-locations-with-food (rest world)))
-      (search-locations-with-food (rest world)))))
+  (filter #(> (:food %1) 0) world))
 
 (defn closed-location
   "find closed location to the human"
@@ -81,7 +78,7 @@
 (defn ^Human walk
   "A human moves to the right every loop. Need to update that user uses algorithm"
   [^Human p]
-  (let [locations (search-locations-with-food (:world p))]
+  (let [locations (cells-with-food (:world p))]
     (if (> (count locations) 0)
       (let [closed-location (closed-location locations p)
             p-x (+ (:x p) (?(- (:x closed-location) (:x p))))
