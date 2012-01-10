@@ -26,8 +26,7 @@
 (defn find-cell
   "Returns the cell"
   [x y actual-world world-size]
-  (nth actual-world (find-cell-loc x y world-size))
-  )
+  (nth actual-world (find-cell-loc x y world-size)))
 
 (defn find-cells
   "Find all cells in the actual world from the coll, which is a collection of [{:x, :y}]"
@@ -54,7 +53,7 @@
    the world as the person sees it with the actual cells from the world."
   [^Human p, actual-world]
   (let [observed-cells (find-cells actual-world (visibles (:x p) (:y p) world-width-height) world-width-height)
-        p-world (reduce #(assoc %1 (+ (:x %2) (* world-width-height (:y %2))) %2) (:world p) observed-cells)]
+        p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-width-height) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
 (defn search-locations-with-food
