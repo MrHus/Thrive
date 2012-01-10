@@ -13,6 +13,8 @@
 
 (def world-width-height 3)
 
+(def movement {:left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
+
 (defn find-cell-loc
   "The formula for getting the 'location' of a cell while knowing the cells x and y is:
    world-width-height   = 1 = max [x | cell-from-world]
