@@ -14,7 +14,7 @@
 	 
 (deftest generate-unkown-world-test
   ;; count is correct should be x * x 
-  (is (= 8 (count (generate-unkown-world 3))))
+  (is (=  8 (count (generate-unkown-world 3))))
   (is (= 16 (count (generate-unkown-world 4))))
 	(is (= 25 (count (generate-unkown-world 5))))	
   
