@@ -11,7 +11,9 @@
 
 ;;;;;;; References ;;;;;;;
 
-(def unknown-world (generate-unknown-world 3))
+(def world-width-height 3)
+
+(def unknown-world (generate-unknown-world world-width-height))
 
 (def world (ref 
   {:cells 
