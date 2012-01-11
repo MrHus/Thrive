@@ -15,6 +15,7 @@
 (def world-width-height 3)
 
 (def movement {:left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
+(def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
 
 (defn find-cell-loc
   "The formula for getting the 'location' of a cell while knowing the cells x and y is:
@@ -77,6 +78,25 @@
     (if (< a 0)
       -1
       0)))
+
+(defn path-finding-a*
+  "Calcuate a path from the first point to the second point on the third given world"
+  [current, finish, world]
+  
+  )
+
+(defn manhattan-distance [[x1 y1] [x2 y2]]
+  (+ (Math/abs ^Integer (- x2 x1)) (Math/abs ^Integer (- y2 y1))))
+
+;((defn cost 
+;   "g(x) - cost of getting to that node from starting node. 
+;    h(x) - cost of getting to the goal node from current node.
+;    f(x) - g(x)+h(x) "
+;   [curr start end]
+;  (let [g (manhattan-distance start curr) 
+;        h (manhattan-distance curr end)   
+;        f (+ g h)]
+;    [f g h])))   
 
 (defn ^Human walk
   "A human moves to the right every loop. Need to update that user uses algorithm"
