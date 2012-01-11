@@ -11,9 +11,9 @@
 
 ;;;;;;; References ;;;;;;;
 
-(def world-width-height 3)
+(def world-size 3)
 
-(def unknown-world (generate-unknown-world world-width-height))
+(def unknown-world (generate-unknown-world world-size))
 
 (def world (ref 
   {:cells 
@@ -29,4 +29,4 @@
   "Sets the actors in motion."
   []  
   (doseq [actor (:actors @world)]
-    (send-off actor loop-actor world world-width-height)))    
+    (send-off actor loop-actor world world-size)))    

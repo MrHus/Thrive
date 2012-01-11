@@ -13,8 +13,8 @@
 
 (defn find-cell-loc
   "The formula for getting the 'location' of a cell while knowing the cells x and y is:
-   world-width-height   = 1 = max [x | cell-from-world]
-   location(cell)       = cell(y) * world-width-height + cell(x)
+   world-size   = 1 = max [x | cell-from-world]
+   location(cell)       = cell(y) * world-size + cell(x)
    location(cell(1, 1)) = 1 * 2 + 1 = 4
    
    Note that the world has to be a perfect square."
@@ -35,6 +35,21 @@
   "Gets all the Cells with food from the world."
   [world]
   (filter #(> (:food %1) 0) world))
+
+;; Define where the neighbors are. (left, right, up, down)
+(def cell-neighbors-mask [[-1 0] [1 0] [-1 0] [0 1]])
+
+(defn surrounding-cells-by-mask
+  "Gets the surrounding cell's of a specific what the surroundings cells are 
+   is determinded by the mask argument. The cells returned are within the bounds of the world.
+   Returns [{:x, :y} ...] of all cells within the mask and the bounds."
+  [x, y, mask, world-size]
+  (filter
+    #(and (>= (:x %) 0) (< (:x %) world-size) (>= (:y %) 0) (< (:y %) world-size))
+	(map 
+		#(let [dx (first %)
+			     dy (last %)]
+			  {:x (+ x dx) :y (+ y dy)}) mask)))
 
 (defn generate-unknown-world
   "Generates an uknown square world the size is determined by the first argument"

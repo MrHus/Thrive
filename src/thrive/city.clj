@@ -24,5 +24,5 @@
 
 (extend-type City
   Actor
-  (live [this world world-width-height] (live-city this (:cells @world)))
+  (live [this world world-size] (live-city this (:cells @world)))
   (interval [this] 30000))

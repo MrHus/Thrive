@@ -38,6 +38,16 @@
 (def unknown-world-size-two
   [(Cell. 0 0 0 :unknown 0), (Cell. 1 0 0 :unknown 0), 
 	 (Cell. 0 1 0 :unknown 0), (Cell. 1 1 0 :unknown 0)])
+
+(def mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]])
+
+(deftest surrounding-cells-by-mask-test
+  ;; The x and y are not near edges 
+ 	(is (= [{:x 1 :y 1}, {:x 0 :y 1} {:x 2 :y 1}, {:x 1 :y 0}, {:x 1 :y 2}] (surrounding-cells-by-mask 1 1 mask world-size)))
+ 	;; The x and y are near edges
+ 	(is (= [{:x 0 :y 0}, {:x 1 :y 0}, {:x 0 :y 1}] (surrounding-cells-by-mask 0 0 mask world-size)))
+ 	(is (= [{:x 2 :y 2}, {:x 1 :y 2}, {:x 2 :y 1}] (surrounding-cells-by-mask 2 2 mask world-size))))
+
 	 
 (deftest generate-unkown-world-test
   ;; count is correct should be x * x 

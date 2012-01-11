@@ -1,6 +1,6 @@
 (ns thrive.human
   (:use thrive.actor)
-  (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food)])
+  (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food, surrounding-cells-by-mask)])
   (:gen-class))
   
 (defrecord Human
@@ -27,26 +27,14 @@
     (and (not= :lava (:tile dest)) (> 1 (- (:z dest) z)))))
 
 ;; What is visible by the Person format is [x, y]
-(def visibility-matrix
-	[[0 0] [-1 0] [1 0] [0 -1] [0 1]])
-
-(defn visibles
-  "Gets the visible cell's of a specific cell, but within the bounds of the world.
-   Returns [{:x, :y} ...] of all cells that are visible"
-  [x, y, world-width-height]
-  (filter
-    #(and (>= (:x %) 0) (< (:x %) world-width-height) (>= (:y %) 0) (< (:y %) world-width-height))
-	(map 
-		#(let [dx (first %)
-			     dy (last %)]
-			  {:x (+ x dx) :y (+ y dy)}) visibility-matrix)))
+(def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]])
 	
 (defn observe
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
-  [^Human p, actual-world world-width-height]
-  (let [observed-cells (find-cells actual-world (visibles (:x p) (:y p) world-width-height) world-width-height)
-        p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-width-height) %2) (:world p) observed-cells)]
+  [^Human p, actual-world world-size]
+  (let [observed-cells (find-cells actual-world (surrounding-cells-by-mask (:x p) (:y p) observe-mask world-size) world-size)
+        p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-size) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
 (defn closed-location
@@ -96,10 +84,10 @@
 
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
-  [^Human p, actual-world world-width-height] 
-  (walk (observe p actual-world world-width-height)))
+  [^Human p, actual-world world-size] 
+  (walk (observe p actual-world world-size)))
 
 (extend-type Human
   Actor
-  (live [this world world-width-height] (live-human this (:cells @world) world-width-height))
+  (live [this world world-size] (live-human this (:cells @world) world-size))
   (interval [this] 1000))
