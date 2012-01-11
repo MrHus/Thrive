@@ -16,6 +16,16 @@
 (def movement {:left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
 (def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
 
+(defn is-move-valid?
+  "Takes the current position of the human (x, y, z).
+   And takes the proposed new position (dx, dy) and checks if the
+   move is valid. A move is invalid when it lands on :lava and
+   when difference of z and dz is more one.
+   It is assumed that the dx and dy are neighbors of x and y"
+  [x y z dx dy world world-size]
+  (let [^Cell dest (find-cell dx dy world world-size)]
+    (and (not= :lava (:tile dest)) (> 1 (- (:z dest) z)))))
+
 ;; What is visible by the Person format is [x, y]
 (def visibility-matrix
 	[[0 0] [-1 0] [1 0] [0 -1] [0 1]])
