@@ -33,11 +33,6 @@
     (.setColor g (color block-color))
     (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
 
-(extend-type City
-  Paintable
-  (paint [this g]
-    (paint-half-block g (:x this) (:y this) "purple")))
-
 (defn paint-cells
   "Paint cells"
   [c g cells]
@@ -59,6 +54,7 @@
 
 ;; Load helper files
 (load "drawer/human")
+(load "drawer/city")
        
 (defn make-ui
   [on-close]
@@ -77,7 +73,8 @@
    The actor is a reference (ref) so it needs te be dereferenced in instance?"
   [actor]
   (cond
-    (instance? Human @actor) (handle-hit-on-human actor)))
+    (instance? Human @actor) (handle-hit-on-human actor)
+    (instance? City @actor)  (handle-hit-on-city actor)))
 
 (defn detect-hit-on-actor
   "If the user clicks on an actor show a nice window with the actors info"
