@@ -10,9 +10,11 @@
 
 (defn paint-selected-human
   [c g]
-  (do
-    (paint-cells c g (:world @@selected-human))))
-
+  (let [human @@selected-human]
+    (paint-cells c g (:world human))
+    (paint-half-block g (:x human) (:y human) "pink")
+    (paint-half-block g (first (:city human)) (last (:city human)) "purple")))
+    
 (defn show-human-detail
   []
   (frame
