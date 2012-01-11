@@ -1,10 +1,14 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world live-world)])
+  
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
+  
   (:require [thrive.city :only (City)])
   (:import (thrive.city City))
+  
   (:import (java.awt.event MouseEvent))
+  
   (:use seesaw.core)
   (:use seesaw.graphics)
   (:use seesaw.color)
