@@ -1,5 +1,6 @@
 (ns thrive.human
   (:use thrive.actor)
+  (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food)])
   (:gen-class))
   
 (defrecord Human
@@ -15,26 +16,6 @@
 (def world-width-height 3)
 
 (def movement {:left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
-
-(defn find-cell-loc
-  "The formula for getting the 'location' of a cell while knowing the cells x and y is:
-   world-width-height   = 1 = max [x | cell-from-world]
-   location(cell)       = cell(y) * world-width-height + cell(x)
-   location(cell(1, 1)) = 1 * 2 + 1 = 4
-   
-   Note that the world has to be a perfect square."
-  [x y world-size]
-  (+ x (* world-size y)))  
-
-(defn find-cell
-  "Returns the cell"
-  [x y actual-world world-size]
-  (nth actual-world (find-cell-loc x y world-size)))
-
-(defn find-cells
-  "Find all cells in the actual world from the coll, which is a collection of [{:x, :y}]"
-  [actual-world coll world-size]
-  (map #(find-cell (:x %) (:y %) actual-world world-size) coll))
 
 ;; What is visible by the Person format is [x, y]
 (def visibility-matrix
@@ -58,11 +39,6 @@
   (let [observed-cells (find-cells actual-world (visibles (:x p) (:y p) world-width-height) world-width-height)
         p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-width-height) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
-
-(defn cells-with-food
-  "Gets all the Cells with food"
-  [world]
-  (filter #(> (:food %1) 0) world))
 
 (defn closed-location
   "find closed location to the human"
