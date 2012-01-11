@@ -4,11 +4,12 @@
   
 (defrecord Human
 [
-  x 	;; The x position on the world
-  y 	;; The y position on the world
+  x 	  ;; The x position on the world
+  y 	  ;; The y position on the world
   z	    ;; The z position on the world, is equal to height of the tile.
   food  ;; The current food this person is carrying.
   world ;; The current world as this person sees it.
+  city  ;; The city coordinates that this person calls home.
 ])
 
 (def world-width-height 3)
