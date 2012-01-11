@@ -29,4 +29,4 @@
   "Sets the actors in motion."
   []  
   (doseq [actor (:actors @world)]
-    (send-off actor loop-actor world)))    
+    (send-off actor loop-actor world world-width-height)))    
