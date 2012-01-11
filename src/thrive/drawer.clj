@@ -33,11 +33,6 @@
     (.setColor g (color block-color))
     (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
 
-(extend-type Human
-  Paintable
-  (paint [this g]
-    (paint-half-block g (:x this) (:y this) "pink")))
-    
 (extend-type City
   Paintable
   (paint [this g]
@@ -61,6 +56,9 @@
     (paint-cells c g (:cells @world))
     (doseq [actor (:actors @world)]
       (paint @actor g))))
+
+;; Load helper files
+(load "drawer/human")
        
 (defn make-ui
   [on-close]
@@ -74,31 +72,12 @@
                         :background "#ffffff", 
                         :paint paint-world))))
 
-;; Will be an atom that points to an agent. Aka a ref to a ref!
-(def selected-actor (atom nil))
-
-(defn paint-selected-actor
-  [c g]
-  (do
-    (paint-cells c g (:world @@selected-actor))))
-
-(defn show-actor-detail
-  []
-  (frame
-    :title "Actor detail"
-    :width 500 :height 500
-    :on-close :hide
-    :content
-      (border-panel
-        :center (canvas :id :show-actor-detail-canvas,
-                        :background "#ffffff",
-                        :paint paint-selected-actor))))
-
-(defn add-behaviors-for-actor-window
-  [root]
-  (let [t (timer (fn [_] (repaint! (select root [:#show-actor-detail-canvas]))) :delay 60 :start? true, :repeats? true)]
-    (listen root   :window-closing (fn [_] (.stop t))))
-  root)
+(defn handle-hit-on-actor
+  "Handles a hit on the actor. Shows different windows based on actor.
+   The actor is a reference (ref) so it needs te be dereferenced in instance?"
+  [actor]
+  (cond
+    (instance? Human @actor) (handle-hit-on-human actor)))
 
 (defn detect-hit-on-actor
   "If the user clicks on an actor show a nice window with the actors info"
@@ -109,13 +88,8 @@
      (let [ax (+ (* cell-size (:x @actor)) (/ cell-half-size 2)) 
            ay (+ (* cell-size (:y @actor)) (/ cell-half-size 2))]
         (if (and (> x ax) (< x (+ ax cell-half-size)) (> y ay) (< y (+ ay cell-half-size)))
-          (do
-            (reset! selected-actor actor)
-            (invoke-later
-              (-> (show-actor-detail)
-                add-behaviors-for-actor-window 
-                show!))))))))
-                     
+          (handle-hit-on-actor actor))))))
+                   
 (defn add-behaviors
   [root]
   (let [t (timer (fn [_] (repaint! (select root [:#world-canvas]))) :delay 60 :start? true, :repeats? true)]
