@@ -22,9 +22,11 @@
    move is valid. A move is invalid when it lands on :lava and
    when difference of z and dz is more one.
    It is assumed that the dx and dy are neighbors of x and y"
-  [x y z dx dy world world-size]
-  (let [^Cell dest (find-cell dx dy world world-size)]
-    (and (not= :lava (:tile dest)) (> 1 (- (:z dest) z)))))
+  ([^Human p dx dy world world-size]
+   (is-move-valid? (:x p) (:y p) (:z p) dx dy world world-size))
+  ([x y z dx dy world world-size]
+    (let [^Cell dest (find-cell dx dy world world-size)]
+      (and (not= :lava (:tile dest)) (> 1 (- (:z dest) z))))))
 
 ;; What is visible by the Person format is [x, y]
 (def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]])
@@ -84,13 +86,15 @@
 
 (defn ^Human right-walk
   "Walks to the right. Is used to test stuff."
-  [^Human p]
-  (assoc p :x (inc (:x p))))
+  [^Human p world-size]
+  (if (is-move-valid? p (inc (:x p)) (:y p) (:world p) world-size)
+    (assoc p :x (inc (:x p)))
+    p))
 
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
   [^Human p, actual-world world-size] 
-  (right-walk (observe p actual-world world-size)))
+  (right-walk (observe p actual-world world-size) world-size))
 
 (extend-type Human
   Actor
