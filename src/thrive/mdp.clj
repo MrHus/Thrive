@@ -12,12 +12,14 @@
    :value of nil nil is returned."
   [x y world world-size]
   (let [neighbors (surrounding-cells-by-mask x y max-value-mask world-size)
-        values    (map #(:value (find-cell (:x %) (:y %) world world-size)) neighbors)
-        maxval    (apply max (map #(if (or (nil? %) (false? %)) -9999 %) values))]
+        values    (map #(:value (find-cell (:x %) (:y %) world world-size)) neighbors)]
     ;;(println "("x","y")" " values " values " maxval " maxval)
-    (if (= maxval -9999)
-      nil
-      maxval)))            
+    (if (every? false? values)
+      false
+      (let [maxval (apply max (map #(if (or (nil? %) (false? %)) -9999 %) values))]
+        (if (= maxval -9999)
+          nil
+          maxval)))))
 
 (defn- ^Cell assign-value
   "Assigns the :value key for a Cell.
@@ -32,7 +34,9 @@
       (assoc c :value false)
       (let [maxval (max-value-for-cell (:x c) (:y c) world world-size)]
         (if (not (nil? maxval))
-          (assoc c :value (- maxval (traversable (:tile c))))
+          (if (false? maxval)
+            (assoc c :value false)
+            (assoc c :value (- maxval (traversable (:tile c)))))
           c)))))
 
 (defn value-iteration
