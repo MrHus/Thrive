@@ -53,15 +53,17 @@
         (recur (map #(assign-value % world world-size) world))))))
         
 (defn plan
+  "Takes the start point (x, y) and calculates a route to (dx, dy).
+   The route is a list of vectors: '([0 1] [2 0] [3 5])"
   [x y dx dy world world-size]
   (let [world (value-iteration dx dy world world-size)
         start (find-cell x y world world-size)
         goal  (find-cell dx dy world world-size)]
     (loop [route [] current start]
       (if (= current goal)
-        (map #([(:x %) (:y %)]) route)
+        (map #(vector (:x %) (:y %)) route)
         (let [neighbors-loc (surrounding-cells-by-mask (:x current) (:y current) max-value-mask world-size)
-              neighbors     (find-cells world neighbors-loc world-size)
+              neighbors     (filter #(not (false? (:value %))) (find-cells world neighbors-loc world-size))
               next-cell     (reduce #(if (> (:value %1) (:value %2)) %1 %2) neighbors)]
           (recur (conj route next-cell) next-cell))))))    
               
