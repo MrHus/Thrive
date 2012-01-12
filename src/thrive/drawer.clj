@@ -27,6 +27,7 @@
     :grass    {:color (color "green")},
     :lava     {:color (color "red")},
     :mountain {:color (color "gray")},
+    :desert   {:color (color "yellow")},
     :unknown  {:color (color "black")}
 })
 
@@ -43,6 +44,10 @@
   (doseq [cell cells]
     (.setColor g ((tiles (:tile cell)) :color))
     (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
+    (if (= :mountain (:tile cell))
+      (do
+        (.setColor g (color "black"))
+        (.drawString g (str (:z cell)) (+ cell-half-size (* cell-size (:x cell))) (+ cell-half-size (* cell-size(:y cell))))))
     (if (not (zero? (:food cell)))
       (paint-half-block g (:x cell) (:y cell) "orange"))))
 

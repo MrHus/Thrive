@@ -11,18 +11,125 @@
 
 ;;;;;;; References ;;;;;;;
 
-(def world-size 3)
+(def world-size 10)
 
 (def unknown-world (generate-unknown-world world-size))
 
+(def test-world
+  [{:x 0, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 2, :y 0, :z 0, :tile :lava, :food 0}
+   {:x 3, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 0, :z 0, :tile :sea, :food 0}
+   {:x 5, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 0, :z 0, :tile :grass, :food 0}
+   {:x 9, :y 0, :z 0, :tile :grass, :food 0}
+ 
+   {:x 0, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 2, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 1, :z 0, :tile :sea, :food 0}
+   {:x 5, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 1, :z 0, :tile :grass, :food 0}
+   {:x 9, :y 1, :z 0, :tile :grass, :food 0}
+ 
+   {:x 0, :y 2, :z 0, :tile :lava, :food 0}
+   {:x 1, :y 2, :z 0, :tile :lava, :food 0}
+   {:x 2, :y 2, :z 0, :tile :lava, :food 0}
+   {:x 3, :y 2, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 2, :z 0, :tile :sea, :food 0}
+   {:x 5, :y 2, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 2, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 2, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 2, :z 0, :tile :grass, :food 0}
+   {:x 9, :y 2, :z 0, :tile :grass, :food 0}
+ 
+   {:x 0, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 2, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 3, :z 0, :tile :sea, :food 0}
+   {:x 5, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 3, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 3, :z 0, :tile :desert, :food 0}
+   {:x 9, :y 3, :z 0, :tile :desert, :food 0}
+ 
+   {:x 0, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 2, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 4, :z 0, :tile :sea, :food 0}
+   {:x 5, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 4, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 4, :z 0, :tile :desert, :food 0}
+   {:x 9, :y 4, :z 0, :tile :desert, :food 0}
+ 
+   {:x 0, :y 5, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 5, :z 4, :tile :mountain, :food 0}
+   {:x 2, :y 5, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 5, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 5, :z 0, :tile :sea, :food 0}
+   {:x 5, :y 5, :z 0, :tile :sea, :food 0}
+   {:x 6, :y 5, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 5, :z 0, :tile :sea, :food 0}
+   {:x 8, :y 5, :z 0, :tile :sea, :food 0}
+   {:x 9, :y 5, :z 0, :tile :sea, :food 0}
+ 
+   {:x 0, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 6, :z 3, :tile :mountain, :food 0}
+   {:x 2, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 4, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 5, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 6, :z 0, :tile :grass, :food 0}
+   {:x 9, :y 6, :z 0, :tile :grass, :food 0}
+ 
+   {:x 0, :y 7, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 7, :z 2, :tile :mountain, :food 0}
+   {:x 2, :y 7, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 7, :z 2, :tile :mountain, :food 0}
+   {:x 4, :y 7, :z 2, :tile :mountain, :food 0}
+   {:x 5, :y 7, :z 2, :tile :mountain, :food 0}
+   {:x 6, :y 7, :z 3, :tile :mountain, :food 0}
+   {:x 7, :y 7, :z 2, :tile :mountain, :food 0}
+   {:x 8, :y 7, :z 1, :tile :mountain, :food 0}
+   {:x 9, :y 7, :z 1, :tile :mountain, :food 0}
+ 
+   {:x 0, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 8, :z 1, :tile :mountain, :food 0}
+   {:x 2, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 8, :z 1, :tile :mountain, :food 0}
+   {:x 4, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 5, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 8, :z 0, :tile :grass, :food 0}
+   {:x 9, :y 8, :z 0, :tile :desert, :food 0}
+ 
+   {:x 0, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 1, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 2, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 3, :y 9, :z 1, :tile :mountain, :food 0}
+   {:x 4, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 5, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 7, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 8, :y 9, :z 0, :tile :grass, :food 0}
+   {:x 9, :y 9, :z 0, :tile :desert, :food 0}])
+
 (def world (ref 
-  {:cells 
-    [(Cell. 0 0 0 :grass 0),  (Cell. 1 0 0 :grass 15),    (Cell. 2 0 0 :grass 15), 
-     (Cell. 0 1 0 :sea 0),    (Cell. 1 1 0 :sea 0),       (Cell. 2 1 0 :mountain 0),
-     (Cell. 0 2 0 :sea 0),    (Cell. 1 2 0 :mountain 0),  (Cell. 2 2 0 :lava 0)]
-   
-   :actors
-    [(agent (City. 0 0 0 50 unknown-world)) (agent (Human. 0 1 0 5 unknown-world [0 0]))]
+  {
+    :cells  test-world
+    :actors [(agent (City. 9 1 0 50 unknown-world)) (agent (Human. 0 1 0 5 unknown-world [9 1]))]
   }))
 
 (defn live-world

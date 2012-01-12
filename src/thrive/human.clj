@@ -82,10 +82,15 @@
       (let [p-x (+ (:x p) 1)]
         (assoc p :x p-x)))))
 
+(defn ^Human right-walk
+  "Walks to the right. Is used to test stuff."
+  [^Human p]
+  (assoc p :x (inc (:x p))))
+
 (defn ^Human live-human
   "A human first observers his surroundings than makes a move."
   [^Human p, actual-world world-size] 
-  (walk (observe p actual-world world-size)))
+  (right-walk (observe p actual-world world-size)))
 
 (extend-type Human
   Actor
