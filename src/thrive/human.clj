@@ -5,16 +5,20 @@
   
 (defrecord Human
 [
-  x 	  ;; The x position on the world
-  y 	  ;; The y position on the world
-  z	    ;; The z position on the world, is equal to height of the tile.
-  food  ;; The current food this person is carrying.
-  world ;; The current world as this person sees it.
-  city  ;; The city coordinates that this person calls home.
+  x 	     ;; The x position on the world
+  y 	     ;; The y position on the world
+  z	       ;; The z position on the world, is equal to height of the tile.
+  food     ;; The current food this person is carrying.
+  world    ;; The current world as this person sees it.
+  city     ;; The city coordinates that this person calls home.
+  action   ;; The action the human is thinking of
+  movement ;; The movement the human needs to walk to reach the destination
 ])
     
-(def movement {:left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
+(def movement {:stay [0,0], :left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
 (def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
+(def actions [:find-food , :scout , :hungry ])
+(def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person format is [x, y]
 
 (defn is-move-valid?
   "Takes the current position of the human (x, y, z).
@@ -28,9 +32,6 @@
     (let [^Cell dest (find-cell dx dy world world-size)]
       (and (not= :lava (:tile dest)) (> 1 (- (:z dest) z))))))
 
-;; What is visible by the Person format is [x, y]
-(def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]])
-	
 (defn observe
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
@@ -54,7 +55,7 @@
       0)))
 
 (defn path-finding-a*
-  "Calcuate a path from the first point to the second point on the third given world"
+  "Calcuate a path from the current point to the finish point on the given world"
   [current, finish, world]
   
   )
@@ -71,6 +72,12 @@
 ;        h (manhattan-distance curr end)   
 ;        f (+ g h)]
 ;    [f g h])))   
+
+(defn think
+  "The smart part of the human. This function comes with the action to do. 
+   Use thinks like bayes rule"
+  
+  )
 
 (defn ^Human walk
   "A human moves to the right every loop. Need to update that user uses algorithm"

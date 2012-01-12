@@ -77,7 +77,7 @@
    {:x 3, :y 5, :z 0, :tile :grass, :food 0}
    {:x 4, :y 5, :z 0, :tile :sea, :food 0}
    {:x 5, :y 5, :z 0, :tile :sea, :food 0}
-   {:x 6, :y 5, :z 0, :tile :grass, :food 0}
+   {:x 6, :y 5, :z 0, :tile :grass, :food 50}
    {:x 7, :y 5, :z 0, :tile :sea, :food 0}
    {:x 8, :y 5, :z 0, :tile :sea, :food 0}
    {:x 9, :y 5, :z 0, :tile :sea, :food 0}
@@ -131,8 +131,8 @@
     :cells  test-world
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
-      (agent (Human. 0 0 0 5 unknown-world [9 1])) 
-      (agent (Human. 0 5 0 5 unknown-world [9 1]))]
+      (agent (Human. 0 0 0 5 unknown-world [9 1] :find-food :stay)) 
+      (agent (Human. 0 5 0 5 test-world [9 1] :find-food :stay))]
   }))
 
 (defn live-world

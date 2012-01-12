@@ -116,4 +116,4 @@
     (live-world)
     (app :exit)))
 
-;;(-main); I'm not typing it manually every time i want to test            
+(if (= (System/getProperty "os.name") "Windows 7") (-main))
