@@ -36,11 +36,8 @@
   [world]
   (filter #(> (:food %1) 0) world))
 
-;; Define where the neighbors are. (left, right, up, down)
-(def cell-neighbors-mask [[-1 0] [1 0] [-1 0] [0 1]])
-
 (defn surrounding-cells-by-mask
-  "Gets the surrounding cell's of a specific what the surroundings cells are 
+  "Gets the surrounding cell's of a specific cell. What the surroundings cells are 
    is determinded by the mask argument. The cells returned are within the bounds of the world.
    Returns [{:x, :y} ...] of all cells within the mask and the bounds."
   [x, y, mask, world-size]
