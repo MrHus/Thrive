@@ -51,4 +51,22 @@
       (if (every? #(not (nil? (:value %))) world)
         world
         (recur (map #(assign-value % world world-size) world))))))
+        
+(defn plan
+  [x y dx dy world world-size]
+  (let [world (value-iteration dx dy world world-size)
+        start (find-cell x y world world-size)
+        goal  (find-cell dx dy world world-size)]
+    (loop [route [] current start]
+      (if (= current goal)
+        (map #([(:x %) (:y %)]) route)
+        (let [neighbors-loc (surrounding-cells-by-mask (:x current) (:y current) max-value-mask world-size)
+              neighbors     (find-cells world neighbors-loc world-size)
+              next-cell     (reduce #(if (> (:value %1) (:value %2)) %1 %2) neighbors)]
+          (recur (conj route next-cell) next-cell))))))    
+              
+              
+            
+            
+            
   

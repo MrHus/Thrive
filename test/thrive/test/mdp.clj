@@ -41,3 +41,8 @@
   (is (= test-world-value-iterated-1 (value-iteration 2 0 test-world-1 world-size)))
   (is (= test-world-value-iterated-2 (value-iteration 2 0 test-world-2 world-size)))
   (is (= test-world-value-iterated-3 (value-iteration 2 0 test-world-3 world-size))))
+  
+(deftest plan-test
+  (is (= '([0 2] [0 1] [0 0] [1 0] [2 0] (plan 0 2 2 0 test-world1))))
+  (is (= '([0 2] [0 1] [0 0] [1 0] [2 0] (plan 0 2 2 0 test-world2))))
+  (is (= '([0 2] [0 1] [0 0] [1 0] [2 0] (plan 0 2 2 0 test-world3)))))  
