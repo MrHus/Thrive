@@ -5,7 +5,7 @@
 
 (def world-size 3)
 
-(def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
+;; (def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
 
 (def test-world
   [(Cell. 0 0 0 :grass 0),  (Cell. 1 0 0 :grass 0),  (Cell. 2 0 0 :grass 0), 

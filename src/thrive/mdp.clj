@@ -6,7 +6,7 @@
 ;; Define where the neighbors are. (left, right, up, down)
 (def max-value-mask [[-1 0] [1 0] [0 -1] [0 1]])
 
-(defn max-value-for-cell
+(defn- max-value-for-cell
   "Returns the highest :value of neighboring cells.
    If there is no highest value because all neighbors had 
    :value of nil nil is returned."
@@ -19,7 +19,7 @@
       nil
       maxval)))            
 
-(defn ^Cell assign-value
+(defn- ^Cell assign-value
   "Assigns the :value key for a Cell.
    If the value is already set it doesn do anything.
    If the cell cannot be crossed :value is set to false.
