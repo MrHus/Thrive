@@ -15,4 +15,6 @@
 *~
 *#
 .tm_properties
+leintest
 lein-test.bat
+lein-test-output.bat
