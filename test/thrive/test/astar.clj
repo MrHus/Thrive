@@ -74,12 +74,9 @@
   (is (= (manhattan-distance [4, 4] [2, 2]) 4 )))
 
 (deftest test-a*
-  ;(is (= (get-path-a* [1 6] [1 1] traversable simple-world) [[1 5], [1, 4], [1, 3], [1,2] [1, 1]]))
-  ;(is (= (get-path-a* [1 1] [1 6] traversable simple-world) [[1 2], [1, 2], [1, 3], [1,4] [1, 6]]))
+  (is (= (get-path-a* [1 6] [1 1] traversable simple-world) [[1 5], [1, 4], [1, 3], [1,2] [1, 1]]))
+  (is (= (get-path-a* [1 1] [1 6] traversable simple-world) [[1 2], [1, 2], [1, 3], [1,4] [1, 6]]))
   
-  ;(is (= (get-path-a* [1 1] [1 6] traversable round-world) [[1 2], [1, 2], [1, 3], [1,4] [1, 6]]))
-  )
-  
-  
-  
+  (is (= (get-path-a* [1 1] [1 6] traversable round-world) [[1 2], [1, 2], [1, 3], [1,4] [1, 6]]))
+  ) 
   
