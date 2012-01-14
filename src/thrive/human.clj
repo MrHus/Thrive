@@ -17,7 +17,7 @@
     
 (def movement {:stay [0,0], :left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
 (def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
-(def actions [:find-food , :scout , :hungry ])
+(def actions [:scavenge-food , :scout , :hungry ])
 (def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person format is [x, y]
 
 (defn is-move-valid?
@@ -53,25 +53,6 @@
     (if (< a 0)
       -1
       0)))
-
-(defn path-finding-a*
-  "Calcuate a path from the current point to the finish point on the given world"
-  [current, finish, world]
-  
-  )
-
-(defn manhattan-distance [[x1 y1] [x2 y2]]
-  (+ (Math/abs ^Integer (- x2 x1)) (Math/abs ^Integer (- y2 y1))))
-
-;((defn cost 
-;   "g(x) - cost of getting to that node from starting node. 
-;    h(x) - cost of getting to the goal node from current node.
-;    f(x) - g(x)+h(x) "
-;   [curr start end]
-;  (let [g (manhattan-distance start curr) 
-;        h (manhattan-distance curr end)   
-;        f (+ g h)]
-;    [f g h])))   
 
 (defn think
   "The smart part of the human. This function comes with the action to do. 
