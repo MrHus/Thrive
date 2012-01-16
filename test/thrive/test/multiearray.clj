@@ -1,5 +1,5 @@
-(ns thrive.test.astar
-  (:use [thrive.pathfinding.astar])
+(ns thrive.test.multiearray
+  (:use [thrive.multiearray.multiearray])
   (:use [clojure.test])
   (:use [thrive.cell])
   (:import (thrive.cell Cell)))
@@ -66,8 +66,23 @@
                    [(Cell. 0 7 0 :lava 0),  (Cell. 1 7 0 :lava 0),  (Cell. 2 7 0 :lava 0),  (Cell. 2 7 0 :lava 0),  (Cell. 2 7 0 :lava 0),  (Cell. 2 0 0 :lava 0),  (Cell. 2 0 0 :lava 0),  (Cell. 2 0 0 :lava 0),  (Cell. 2 0 0 :lava 0)]])
 
 
-(def movement {:stay [0,0], :left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
+(def map-world {[0 0] (Cell. 0 0 0 :lava 0)})
+  
+  
+(def movement {:stay [0,0], :left [1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
 (def traversable {:city 1, :grass 1, :sand 2, :mountain 2, :sea 15, :lava false})
+
+(deftest test-in?
+  (is (= (in? movement [0 1]) true))
+  (is (= (in? movement [0 -1]) true))
+  (is (= (in? movement [0 2]) false))
+  )
+
+(deftest test-is-valid-move?
+  (is (= (is-valid-move? [1 6] [1 5] movement traversable simple-world) true))
+  (is (= (is-valid-move? [1 5] [1 4] movement traversable simple-world) true))
+  (is (= (is-valid-move? [1 5] [2 5] movement traversable simple-world) false))
+  )
 
 (deftest test-get-cell
   (is (= (get-cell [0 0] simple-world) (Cell. 0 0 0 :lava 0)))
