@@ -12,7 +12,7 @@
 (defn cost-path
   "Calculate the cost of the path as the name suggets"
   [seq traversable]
-  (if (= (count seq) 0)
+  (if (empty? seq)
     0
     (+ ((:tile (first seq)) traversable) (cost-path (rest seq) traversable))))
 
@@ -31,5 +31,19 @@
 
 (defn get-path-a*
   "Calcuate a path from the current point to the finish point on the given world"
-  [[x1 y1] [x2 y2] traversable world]
-  ())
+  [[x1 y1] [x2 y2] movement traversable world world-size]
+  (map #() ))
+
+
+;  (((((((((((((()))))))))))))))
+; surrounding-cells-by-mask
+;
+; (loop [seq current ]
+;  (if (== current goal)
+;    (seq)
+;   (doseq [m movement] 
+;    (cost 
+;     (find-cell (+ (:x (val m)) x1) (+ (:y (val m)) y1) world world-size)
+;    [x2 y2] traversable)
+;   )
+; (recur [])))))
