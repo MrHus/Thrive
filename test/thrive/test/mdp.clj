@@ -5,7 +5,9 @@
 
 (def world-size 3)
 
-;; (def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
+(def movement {:stay [0 0], :left [0 -1], :right [0 1], :up [-1 0], :down [1 0]})
+(def movement-mask [[0 -1] [0 1] [-1 0] [1 0]])
+(def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :desert 2, :lava false})
 
 (def test-world-1
   [(Cell. 0 0 0 :grass 0),  (Cell. 1 0 0 :grass 0),  (Cell. 2 0 0 :grass 0), 
@@ -38,11 +40,11 @@
   (assoc (Cell. 0 2 0 :city 0)  :value 96), (assoc (Cell. 1 2 0 :lava 0), :value false) (assoc (Cell. 2 2 0 :grass 0) :value false)])
   
 (deftest value-iteration-test
-  (is (= test-world-value-iterated-1 (value-iteration 2 0 test-world-1 world-size)))
-  (is (= test-world-value-iterated-2 (value-iteration 2 0 test-world-2 world-size)))
-  (is (= test-world-value-iterated-3 (value-iteration 2 0 test-world-3 world-size))))
+  (is (= test-world-value-iterated-1 (value-iteration 2 0 movement-mask traversable test-world-1 world-size)))
+  (is (= test-world-value-iterated-2 (value-iteration 2 0 movement-mask traversable test-world-2 world-size)))
+  (is (= test-world-value-iterated-3 (value-iteration 2 0 movement-mask traversable test-world-3 world-size))))
   
 (deftest plan-test
-  (is (= '([0 1] [0 0] [1 0] [2 0]) (plan 0 2 2 0 test-world-1 world-size)))
-  (is (= '([0 1] [0 0] [1 0] [2 0]) (plan 0 2 2 0 test-world-2 world-size)))
-  (is (= '([0 1] [0 0] [1 0] [2 0]) (plan 0 2 2 0 test-world-3 world-size))))  
+  (is (= '([0 1] [0 0] [1 0] [2 0]) (plan 0 2 2 0 movement traversable test-world-1 world-size)))
+  (is (= '([0 1] [0 0] [1 0] [2 0]) (plan 0 2 2 0 movement traversable test-world-2 world-size)))
+  (is (= '([0 1] [0 0] [1 0] [2 0]) (plan 0 2 2 0 movement traversable test-world-3 world-size))))

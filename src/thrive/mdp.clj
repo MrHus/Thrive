@@ -1,16 +1,13 @@
 (ns thrive.mdp
-  (:use [thrive.human :only (traversable, movement)])
   (:use [thrive.cell])
   (:import (thrive.cell Cell)))
 
-;; Define where the neighbors are. (left, right, up, down)
-(def max-value-mask [[-1 0] [1 0] [0 -1] [0 1]])
-
 (defn- max-value-for-cell
-  "Returns the highest :value of neighboring cells.
+  "Returns the highest :value of neighboring cells. What
+   the neighbors are are defined by the max-value-mask. 
    If there is no highest value because all neighbors had 
    :value of nil nil is returned."
-  [x y world world-size]
+  [x y max-value-mask world world-size]
   (let [neighbors (surrounding-cells-by-mask x y max-value-mask world-size)
         values    (map #(:value (find-cell (:x %) (:y %) world world-size)) neighbors)]
     ;;(println "("x","y")" " values " values " maxval " maxval)
@@ -27,12 +24,12 @@
    If the cell cannot be crossed :value is set to false.
    If a cell is traverable the value is the highest value of a neighboring cell 
    minus the cost of traversing this cell."
-  [^Cell c world world-size]
+  [^Cell c max-value-mask traversable world world-size]
   (if (not (nil? (:value c)))
     c
     (if (= false (traversable (:tile c)))
       (assoc c :value false)
-      (let [maxval (max-value-for-cell (:x c) (:y c) world world-size)]
+      (let [maxval (max-value-for-cell (:x c) (:y c) max-value-mask world world-size)]
         (if (not (nil? maxval))
           (if (false? maxval)
             (assoc c :value false)
@@ -44,21 +41,22 @@
    on how close it is to the Cell(dx, dy). If a cell is
    not traversable the :value key is false. If it is
    traversable :value is an int."
-  [dx dy world world-size]
-  (let [goal (assoc (find-cell dx dy world world-size) :value 100)
+  [dx dy max-value-mask traversable world world-size]
+  (let [goal  (assoc (find-cell dx dy world world-size) :value 100)
         world (assoc world (find-cell-loc dx dy world-size) goal)]
     (loop [world world]
       (if (every? #(not (nil? (:value %))) world)
         world
-        (recur (map #(assign-value % world world-size) world))))))
+        (recur (map #(assign-value % max-value-mask traversable world world-size) world))))))
         
 (defn plan
   "Takes the start point (x, y) and calculates a route to (dx, dy).
    The route is a list of vectors: '([0 1] [2 0] [3 5])"
-  [x y dx dy world world-size]
-  (let [world (value-iteration dx dy world world-size)
+  [x y dx dy movement traversable world world-size]
+  (let [max-value-mask (for [[k v] movement :when (not= v [0 0])] v)
+        world (value-iteration dx dy max-value-mask traversable world world-size)
         start (find-cell x y world world-size)
-        goal  (find-cell dx dy world world-size)]
+        goal  (find-cell dx dy world world-size)]        
     (loop [route [] current start]
       (if (= current goal)
         (map #(vector (:x %) (:y %)) route)
