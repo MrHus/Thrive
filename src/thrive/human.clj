@@ -36,7 +36,7 @@
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
   [^Human p, actual-world world-size]
-  (let [observed-cells (find-cells actual-world (surrounding-cells-by-mask (:x p) (:y p) observe-mask world-size) world-size)
+  (let [observed-cells (map #(assoc % :time (System/currentTimeMillis)) (find-cells actual-world (surrounding-cells-by-mask (:x p) (:y p) observe-mask world-size) world-size))
         p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-size) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
