@@ -131,8 +131,8 @@
     :cells  test-world
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
-      (agent (Human. 0 0 0 5 unknown-world [9 1] :find-food :stay)) 
-      (agent (Human. 0 5 0 5 test-world [9 1] :find-food :stay))]
+      (agent (Human. 0 0 0 5 unknown-world [9 1] :find-food :stay :mdp)) 
+      (agent (Human. 0 5 0 5 test-world [9 1] :find-food :stay :astar))]
   }))
 
 (defn live-world

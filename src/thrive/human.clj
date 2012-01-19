@@ -1,24 +1,26 @@
 (ns thrive.human
   (:use thrive.actor)
   (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food, surrounding-cells-by-mask)])
+  (:use [thrive.planner :only (get-plan)])
   (:gen-class))
-  
+
 (defrecord Human
 [
-  x 	     ;; The x position on the world
-  y 	     ;; The y position on the world
-  z	       ;; The z position on the world, is equal to height of the tile.
+  x        ;; The x position on the world
+  y        ;; The y position on the world
+  z        ;; The z position on the world, is equal to height of the tile.
   food     ;; The current food this person is carrying.
   world    ;; The current world as this person sees it.
   city     ;; The city coordinates that this person calls home.
   action   ;; The action the human is thinking of
   movement ;; The movement the human needs to walk to reach the destination
+  planner  ;; Defines which pathfinding algorithm the human knows
 ])
-    
+
 (def movement {:stay [0,0], :left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
 (def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :lava false})
 (def actions [:scavenge-food , :scout , :hungry ])
-(def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person format is [x, y]
+(def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person, format is [x, y]
 
 (defn is-move-valid?
   "Takes the current position of the human (x, y, z).
@@ -54,12 +56,6 @@
       -1
       0)))
 
-(defn think
-  "The smart part of the human. This function comes with the action to do. 
-   Use thinks like bayes rule"
-  
-  )
-
 (defn ^Human walk
   "A human moves to the right every loop. Need to update that user uses algorithm"
   [^Human p]
@@ -79,10 +75,25 @@
     (assoc p :x (inc (:x p)))
     p))
 
+(defn ^Human think
+  "A human decides a course of action based on his current state.
+   Still needs to have/obtain a destination (currently set for the city).
+   Then walk function needs to be updated so that Human moves to the first
+   location stored in the movement/detail-plan/walk-path vector"
+  [^Human p, world-size]
+  (if (empty? (:movement p))
+      (assoc p :movement (get-plan (:planner p) (:x p) (:y p) 9 1 movement traversable (:world p) world-size)))
+  (let [plan (first (:movement p))]
+    (if (is-move-valid? p (0 plan) (1 plan) (:world p) world-size)
+      (walk p))
+    p))
+
 (defn ^Human live-human
-  "A human first observers his surroundings than makes a move."
-  [^Human p, actual-world world-size] 
-  (right-walk (observe p actual-world world-size) world-size))
+  "A human observes his surroundings, thinks up a dicision and then acts accordingly."
+  [^Human p, actual-world world-size]
+  ;(act (think (observe p actual-world world-size) world-size))
+  (right-walk (observe p actual-world world-size) world-size)
+  )
 
 (extend-type Human
   Actor

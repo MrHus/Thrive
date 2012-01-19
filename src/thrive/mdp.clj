@@ -63,5 +63,4 @@
         (let [neighbors-loc (surrounding-cells-by-mask (:x current) (:y current) max-value-mask world-size)
               neighbors     (filter #(not (false? (:value %))) (find-cells world neighbors-loc world-size))
               next-cell     (reduce #(if (> (:value %1) (:value %2)) %1 %2) neighbors)]
-          (recur (conj route next-cell) next-cell))))))    
- 
+          (recur (conj route next-cell) next-cell))))))
