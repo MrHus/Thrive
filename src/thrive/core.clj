@@ -127,13 +127,13 @@
    {:x 9, :y 9, :z 0, :tile :desert, :food 0}])
 
 (def world (ref 
-  {
+{
     :cells  test-world
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
-      (agent (Human. 0 0 0 5 unknown-world [9 1] :find-food :stay :mdp)) 
-      (agent (Human. 0 5 0 5 test-world [9 1] :find-food :stay :astar))]
-  }))
+      (agent (Human. 0 0 0 5 unknown-world [9 1] :find-food [] :mdp))
+      (agent (Human. 0 4 0 5 test-world [9 1] :find-food [] :mdp))]
+}))
 
 (defn live-world
   "Sets the actors in motion."

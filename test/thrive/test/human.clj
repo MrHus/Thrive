@@ -15,9 +15,7 @@
   ;; Walk in lava
   (is (= false (is-move-valid? 0 1 0 0 0 test-world world-size)))
   ;; Walk to grass
-  (is (= true  (is-move-valid? 0 1 0 0 2 test-world world-size)))  
-  ;; Walk up mountain which is to high
-  (is (= false (is-move-valid? 1 0 0 1 1 test-world world-size)))
-  ;; Walk up mountain which is possible
-  (is (= false (is-move-valid? 1 1 2 1 2 test-world world-size))))
+  (is (= true  (is-move-valid? 0 1 0 0 2 test-world world-size)))
+  (is (= true  (is-move-valid? 1 0 0 1 1 test-world world-size)))
+  (is (= true  (is-move-valid? 1 1 2 1 2 test-world world-size))))
   
