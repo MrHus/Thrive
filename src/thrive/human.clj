@@ -18,7 +18,7 @@
 ])
 
 (def movement {:stay [0,0], :left [0, -1], :right [0, 1], :up [-1, 0], :down [1, 0]})
-(def traversable {:city 1, :grass 1, :mountain 3, :sea 15, :unknown 25, :lava false})
+(def traversable {:city 1, :grass 1, :mountain 3, :desert 2 :sea 5, :unknown 25, :lava false})
 (def actions [:scavenge-food , :scout , :hungry ])
 (def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person, format is [x, y]
 
@@ -58,7 +58,7 @@
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
   [^Human p, actual-world world-size]
-  (think (observe p actual-world world-size) world-size))
+  (time (think (observe p actual-world world-size) world-size)))
 
 (extend-type Human
   Actor

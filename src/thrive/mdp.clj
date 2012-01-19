@@ -13,10 +13,10 @@
     ;;(println "("x","y")" " values " values " maxval " maxval)
     (if (every? false? values)
       false
-      (let [maxval (apply max (map #(if (or (nil? %) (false? %)) -9999 %) values))]
-        (if (= maxval -9999)
+      (let [int-values (filter #(not (or (nil? %) (false? %))) values)]
+        (if (empty? int-values)
           nil
-          maxval)))))
+          (apply max int-values))))))
 
 (defn- ^Cell assign-value
   "Assigns the :value key for a Cell.
@@ -48,7 +48,7 @@
       (if (every? #(not (nil? (:value %))) world)
         world
         (recur (map #(assign-value % max-value-mask traversable world world-size) world))))))
-        
+                  
 (defn plan
   "Takes the start point (x, y) and calculates a route to (dx, dy).
    The route is a list of vectors: '([0 1] [2 0] [3 5])"

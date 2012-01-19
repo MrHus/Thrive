@@ -11,5 +11,6 @@
   [actor world world-size]
   (do
     (. Thread sleep (interval actor))
-    (send-off *agent* loop-actor world world-size)
-    (live actor world world-size)))
+    (let [a (live actor world world-size)]
+      (send-off *agent* loop-actor world world-size)
+      a)))
