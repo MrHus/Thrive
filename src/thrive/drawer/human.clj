@@ -8,13 +8,19 @@
 ;; Will be an atom that points to an agent. Aka a ref to a ref!
 (def selected-human (atom nil))
 
+(defn paint-plan-human
+  [g ^Human h]
+  (doseq [[x y] (:movement h)]
+   (paint-half-circle g x y "cyan")))
+
 (defn paint-selected-human
   [c g]
   (let [human @@selected-human]
     (paint-cells c g (:world human))
     (paint-half-block g (:x human) (:y human) "pink")
+    (paint-plan-human g human)
     (paint-half-block g (first (:city human)) (last (:city human)) "purple")))
-    
+  
 (defn show-human-detail
   []
   (frame
