@@ -44,6 +44,11 @@
   (is (== 10 (cost [(Cell. 0 0 0 :grass 0) (Cell. 1 0 0 :grass 0)] [9 0] traversable)))
   (is (== 11 (cost [(Cell. 0 0 0 :grass 0) (Cell. 1 0 0 :sand 0)] [9 0] traversable))))
 
+(deftest test-calculates-cost
+  (is (= (calculates-cost [{:x 0 :y 0} {:x 1 :y 0}] [5 0] traversable) []))
+  )
+
+
 (comment
 (deftest test-a*
   ;(is (= [[1 5], [1 4], [1 3], [1 2] [1 1]] (get-path-a* [1 6] [1 1] traversable movement simple-world simple-world-size)))
