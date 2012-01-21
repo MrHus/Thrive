@@ -5,7 +5,7 @@
   (:import (thrive.cell Cell)))
 
 (def movement {:stay [0,0], :left [1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
-(def traversable {:city 1, :grass 1, :sand 2, :mountain 2, :sea 15, :lava false})
+(def traversable {:grass 1, :sand 2, :mountain 2, :sea 15, :lava false})
 
 (def simple-world-size 3)
 (def simple-world
