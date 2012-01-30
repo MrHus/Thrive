@@ -4,14 +4,9 @@
   (:use [thrive.cell])
   (:import (thrive.cell Cell)))
 
-<<<<<<< HEAD
 ;(def movement {:stay [0,0], :left [-1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
 (def movement {:left [-1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
-(def traversable {:city 1, :grass 1, :sand 2, :mountain 2, :sea 15, :lava false})
-=======
-(def movement {:stay [0,0], :left [1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
 (def traversable {:grass 1, :sand 2, :mountain 2, :sea 15, :lava false})
->>>>>>> master
 
 (def simple-world-size 8)
 (def simple-world
