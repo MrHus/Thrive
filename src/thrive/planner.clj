@@ -9,6 +9,5 @@
   (if (= :mdp algo)
     (mdp/plan x y dx dy movement traversable world world-size)
     (if (= :a* algo)
-      []
-      ;(astar/get-path-a* [x y] [dx dy] movement traversable world world-size)
+      (astar/get-path-a* [x y] [dx dy] movement traversable world world-size)
       )))
