@@ -66,13 +66,16 @@
 (defn get-path-a*
   "Calculate a path from the current point to the finish point on the given world"
   [[x1 y1] [x2 y2] movement traversable world world-size]
-  (loop [frontier (get-frontier [x1 y1] [x2 y2] movement traversable world world-size) expended []]
+  (loop [frontier (get-frontier [x1 y1] [x2 y2] movement traversable world world-size) 
+         expended (conj (into [] (map #(let [cell (first (:cells %))] cell) frontier)) (find-cell x1 y1 world world-size))]
     (let [route (first frontier) active (last (:cells route)) rest-frontier (rest frontier)]
       (if (= [(:x active) (:y active)] [x2 y2])
-        (:cells route)  
-        (let [newcell (get-best-new-cell [(:x active) (:y active)] [x2 y2]  movement traversable expended world world-size)]
+        (do
+          (println expended)
+          (:cells route))
+        (let [newcell (get-best-new-cell [(:x active) (:y active)] [x2 y2] movement traversable expended world world-size)]
           (if (= newcell nil)
             (if (empty? rest-frontier)
               []
-              (recur (sort-by :cost rest-frontier) (conj expended active)))
-            (recur (sort-by :cost (conj rest-frontier {:cost (cost (conj (:cells route) newcell) [x2 y2] traversable) :cells (conj (:cells route) newcell)})) (conj expended active))))))))
+              (recur (sort-by :cost rest-frontier) (conj expended newcell)))
+            (recur (sort-by :cost (conj rest-frontier {:cost (cost (conj (:cells route) newcell) [x2 y2] traversable) :cells (conj (:cells route) newcell)})) (conj expended newcell))))))))
