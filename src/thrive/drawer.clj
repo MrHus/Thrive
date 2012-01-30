@@ -38,6 +38,13 @@
     (.setColor g (color block-color))
     (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
 
+(defn paint-half-circle
+  "Paint a half circle based on the x and y coordinates"
+  [g x y circle-color]
+  (do
+    (.setColor g (color circle-color))
+    (.fillOval g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
+  
 (defn paint-cells
   "Paint cells"
   [c g cells]
