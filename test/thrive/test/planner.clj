@@ -18,7 +18,7 @@
   (is (=  [] (get-plan :mdp 0 0 0 0 movement traversable world world-size)))
   (is (=  [[0 1] [0 0] [1 0] [2 0] [2 1]] (get-plan :mdp 0 2 2 1 movement traversable world world-size)))
   (is (=  [[1 0] [2 0] [2 1] [2 2]] (get-plan :mdp 0 0 2 2 movement traversable world world-size)))
-  (is (= [] (get-plan :astar 0 0 2 2 movement traversable world world-size)))
+  (is (= [] (get-plan :a* 0 0 0 0 movement traversable world world-size)))
   ;(is (= [[1 0] [2 0] [2 1] [2 2]] (get-plan :astar 0 0 2 2 movement
   ;traversable world world-size)))
   )

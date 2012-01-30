@@ -132,7 +132,7 @@
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
       (agent (Human. 0 0 0 5 unknown-world [9 1] :city [] :mdp))
-      (agent (Human. 0 4 0 5 test-world    [9 1] :city [] :mdp))]
+      (agent (Human. 0 4 0 5 test-world    [9 1] :city [] :a*))]
 }))
 
 (defn live-world

@@ -74,12 +74,17 @@
   )
 
 (deftest test-a*
-  (is (= (get-path-a* [1 1] [1 6] movement traversable simple-world simple-world-size) [(Cell. 1 2 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 5 0 :grass 0) (Cell. 1 6 0 :grass 0)]))
-  (is (= (get-path-a* [1 6] [1 1] movement traversable simple-world simple-world-size) [(Cell. 1 5 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 2 0 :grass 0) (Cell. 1 1 0 :grass 0)]))
+  ;(is (= (get-path-a* [1 1] [1 6] movement traversable simple-world simple-world-size) [(Cell. 1 2 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 5 0 :grass 0) (Cell. 1 6 0 :grass 0)]))
+  ;(is (= (get-path-a* [1 6] [1 1] movement traversable simple-world simple-world-size) [(Cell. 1 5 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 2 0 :grass 0) (Cell. 1 1 0 :grass 0)]))
   
+  ;(is (= (get-path-a* [6 1] [6 6] movement traversable round-world round-world-size) [(Cell. 5 1 0 :grass 0) (Cell. 4 1 0 :grass 0) (Cell. 3 1 0 :grass 0) (Cell. 2 1 0 :grass 0) (Cell. 1 1 0 :grass 0) (Cell. 1 2 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 5 0 :grass 0) (Cell. 1 6 0 :grass 0) (Cell. 2 6 0 :grass 0) (Cell. 3 6 0 :grass 0) (Cell. 4 6 0 :grass 0) (Cell. 5 6 0 :grass 0) (Cell. 6 6 0 :grass 0)]))
+  ;(is (= (get-path-a* [6 6] [6 1] movement traversable round-world round-world-size) [(Cell. 5 6 0 :grass 0) (Cell. 4 6 0 :grass 0) (Cell. 3 6 0 :grass 0) (Cell. 2 6 0 :grass 0) (Cell. 1 6 0 :grass 0) (Cell. 1 5 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 2 0 :grass 0) (Cell. 1 1 0 :grass 0) (Cell. 2 1 0 :grass 0) (Cell. 3 1 0 :grass 0) (Cell. 4 1 0 :grass 0) (Cell. 5 1 0 :grass 0) (Cell. 6 1 0 :grass 0)]))
+ 
+  (is (= (get-path-a* [1 1] [1 6] movement traversable simple-world simple-world-size) [[1 2] [1 3] [1 4] [1 5] [1 6]]))
+  (is (= (get-path-a* [1 6] [1 1] movement traversable simple-world simple-world-size) [[1 5] [1 4] [1 3] [1 2] [1 1]]))
   
-  (is (= (get-path-a* [6 1] [6 6] movement traversable round-world round-world-size) [(Cell. 5 1 0 :grass 0) (Cell. 4 1 0 :grass 0) (Cell. 3 1 0 :grass 0) (Cell. 2 1 0 :grass 0) (Cell. 1 1 0 :grass 0) (Cell. 1 2 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 5 0 :grass 0) (Cell. 1 6 0 :grass 0) (Cell. 2 6 0 :grass 0) (Cell. 3 6 0 :grass 0) (Cell. 4 6 0 :grass 0) (Cell. 5 6 0 :grass 0) (Cell. 6 6 0 :grass 0)]))
-  (is (= (get-path-a* [6 6] [6 1] movement traversable round-world round-world-size) [(Cell. 5 6 0 :grass 0) (Cell. 4 6 0 :grass 0) (Cell. 3 6 0 :grass 0) (Cell. 2 6 0 :grass 0) (Cell. 1 6 0 :grass 0) (Cell. 1 5 0 :grass 0) (Cell. 1 4 0 :grass 0) (Cell. 1 3 0 :grass 0) (Cell. 1 2 0 :grass 0) (Cell. 1 1 0 :grass 0) (Cell. 2 1 0 :grass 0) (Cell. 3 1 0 :grass 0) (Cell. 4 1 0 :grass 0) (Cell. 5 1 0 :grass 0) (Cell. 6 1 0 :grass 0)]))
+  (is (= (get-path-a* [6 1] [6 6] movement traversable round-world round-world-size) [[5 1] [4 1] [3 1] [2 1] [1 1] [1 2] [1 3] [1 4] [1 5] [1 6] [2 6] [3 6] [4 6] [5 6] [6 6]]))
+  (is (= (get-path-a* [6 6] [6 1] movement traversable round-world round-world-size) [[5 6] [4 6] [3 6] [2 6] [1 6] [1 5] [1 4] [1 3] [1 2] [1 1] [2 1] [3 1] [4 1] [5 1] [6 1]]))
 
   ;(is (= [[1 5], [1 4], [1 3], [1 2] [1 1]] (get-path-a* [1 6] [1 1] traversable movement simple-world simple-world-size)))
   ;(is (= [[1 2], [1 2], [1 3], [1 4] [1 6]] (get-path-a* [1 1] [1 6] traversable simple-world)))

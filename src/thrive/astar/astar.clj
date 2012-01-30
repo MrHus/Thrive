@@ -1,5 +1,4 @@
 (ns thrive.astar.astar
-  (:use [thrive.human])
   (:use [thrive.cell])
   (:use [clojure.set])
   (:import (thrive.cell Cell)))
@@ -70,9 +69,7 @@
          expended (conj (into [] (map #(let [cell (first (:cells %))] cell) frontier)) (find-cell x1 y1 world world-size))]
     (let [route (first frontier) active (last (:cells route)) rest-frontier (rest frontier)]
       (if (= [(:x active) (:y active)] [x2 y2])
-        (do
-          (println expended)
-          (:cells route))
+          (map #(vector (:x %) (:y %)) (:cells route))
         (let [newcell (get-best-new-cell [(:x active) (:y active)] [x2 y2] movement traversable expended world world-size)]
           (if (= newcell nil)
             (if (empty? rest-frontier)
