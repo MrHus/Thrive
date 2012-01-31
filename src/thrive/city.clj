@@ -22,7 +22,12 @@
   [^City c, actual-world] 
   (decrease-food c 5))
 
+(defn is-alive?
+  [^City c]
+  true)
+
 (extend-type City
   Actor
   (live [this world world-size] (live-city this (:cells @world)))
-  (interval [this] 30000))
+  (interval [this] 30000)
+  (alive? [this] (is-alive? this)))

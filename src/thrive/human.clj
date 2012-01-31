@@ -34,6 +34,10 @@
     (let [^Cell dest (find-cell dx dy world world-size)]
       (not= false (traversable (:tile dest))))))
 
+(defn find-destination
+  [world]
+  {:x 9 :y 1})
+
 (defn observe
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
@@ -41,7 +45,7 @@
   (let [observed-cells (map #(assoc % :time (System/currentTimeMillis)) (find-cells actual-world (surrounding-cells-by-mask (:x p) (:y p) observe-mask world-size) world-size))
         p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-size) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
-        
+
 (defn ^Human think
   "A human decides a course of action based on his current state.
    Still needs to have/obtain a destination (currently set for the city).
@@ -49,11 +53,16 @@
    location stored in the movement/detail-plan/walk-path vector"
   [^Human p, world-size]
   (if (empty? (:movement p))
-    (assoc p :movement (get-plan (:planner p) (:x p) (:y p) 9 1 movement traversable (:world p) world-size))
+    (let [dest (find-destination (:world p))]
+      (assoc p :movement (get-plan (:planner p) (:x p) (:y p) (:x dest) (:y dest) movement traversable (:world p) world-size)))
     (let [plan (first (:movement p))]
       (if (is-move-valid? p (plan 0) (plan 1) (:world p) world-size)
         (assoc p :x (plan 0) :y (plan 1) :movement (rest (:movement p)))
         (assoc p :movement (get-plan (:planner p) (:x p) (:y p) 9 1 movement traversable (:world p) world-size))))))
+
+(defn is-alive?
+  [^Human p]
+  true)
 
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
@@ -63,4 +72,5 @@
 (extend-type Human
   Actor
   (live [this world world-size] (live-human this (:cells @world) world-size))
-  (interval [this] 1000))
+  (interval [this] 1000)
+  (alive? [this] (is-alive? this)))
