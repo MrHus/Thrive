@@ -5,6 +5,7 @@ FIXME: write description
 ## Usage
 (require 'thrive.drawer)
 (thrive.drawer/-main)
+(use :reload-all 'thrive.astar.astar)
 
 FIXME: write
 
