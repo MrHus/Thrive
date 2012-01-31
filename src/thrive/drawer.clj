@@ -7,6 +7,9 @@
   (:require [thrive.city :only (City)])
   (:import (thrive.city City))
   
+  (:require [thrive.seagull :only (Seagull)])
+  (:import (thrive.seagull Seagull))
+  
   (:import (java.awt.event MouseEvent))
   
   (:use seesaw.core)
@@ -71,6 +74,11 @@
 ;; Load helper files
 (load "drawer/human")
 (load "drawer/city")
+
+(extend-type Seagull
+  Paintable
+  (paint [this g]
+    (paint-half-block g (:x this) (:y this) "white")))
        
 (defn make-ui
   [on-close]

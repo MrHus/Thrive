@@ -7,6 +7,8 @@
   (:use [thrive.cell :only (generate-unknown-world)])
   (:require [thrive.cell :only (Cell)])
   (:import (thrive.cell Cell))
+  (:require [thrive.seagull :only (Seagull)])
+  (:import (thrive.seagull Seagull))
   (:gen-class))
 
 ;;;;;;; References ;;;;;;;
@@ -132,7 +134,11 @@
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
       (agent (Human. 0 0 0 5 unknown-world [9 1] :city [] :mdp))
-      (agent (Human. 0 4 0 5 test-world    [9 1] :city [] :a*))]
+      (agent (Human. 0 4 0 5 test-world    [9 1] :city [] :a*))
+      (agent (Seagull. 0 0 0))
+      (agent (Seagull. 5 5 0))
+      (agent (Seagull. 9 9 0))
+    ]
 }))
 
 (defn live-world
