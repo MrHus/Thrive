@@ -79,5 +79,12 @@
           (if (zero? (count newcells))
             (if (empty? rest-frontier)
               []
-              (recur (sort-by :cost rest-frontier) (conj expended newcells)))
-            (recur (sort-by :cost (conj rest-frontier (map (fn [cell] {:cost (cost [cell] [x2 y2] traversable) :cells (conj (:cells route) cell)}) newcells))) (flatten (conj expended newcells)))))))))
+              (recur (sort-by :cost rest-frontier) (flatten (conj expended newcells))))
+            (recur 
+              (sort-by :cost (flatten  (conj rest-frontier 
+                                             (map 
+                                               (fn [cell] 
+                                                 {:cost (cost [cell] [x2 y2] traversable) :cells (conj (:cells route) cell)}
+                                                 ) newcells))))
+              (flatten (conj expended newcells))
+              )))))))
