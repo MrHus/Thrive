@@ -36,12 +36,12 @@
 (defn find-moveable-cells
   [[x y] movement traversable world world-size]
   (into [] (filter #(not= ((:tile %) traversable) false) (find-cells 
-            world 
-            (surrounding-cells-by-mask 
-              x y
-              (map #(val %) movement) 
-              world-size)
-            world-size)
+                                                           world 
+                                                           (surrounding-cells-by-mask 
+                                                             x y
+                                                             (map #(val %) movement) 
+                                                             world-size)
+                                                           world-size)
                    )))
 
 (defn get-frontier
@@ -55,7 +55,10 @@
 
 (defn get-best-new-cells
   [[x1 y1] [x2 y2] movement traversable expended world world-size]
-  (sort-by :cost (filter #(not (somer (first (:cells %)) expended)) (get-frontier [x1 y1] [x2 y2] movement traversable world world-size))))
+  (flatten (map :cells (sort-by :cost 
+                       (filter #(not (somer (first (:cells %)) expended)) 
+                               (get-frontier [x1 y1] [x2 y2] movement traversable world world-size)
+                               )))))
 
 (defn calculate-cost
   "Calculates the cost for every item in the list and returns a list with the cost a key"
@@ -73,8 +76,8 @@
       (if (= [(:x active) (:y active)] [x2 y2])
         (map #(vector (:x %) (:y %)) (:cells route))
         (let [newcells (get-best-new-cells [(:x active) (:y active)] [x2 y2] movement traversable expended world world-size)]
-          (if (= (count newcells) 0)
+          (if (zero? (count newcells))
             (if (empty? rest-frontier)
               []
               (recur (sort-by :cost rest-frontier) (conj expended newcells)))
-            (recur (sort-by :cost (conj rest-frontier {:cost (cost (conj (:cells route) newcells) [x2 y2] traversable) :cells (conj (:cells route) newcells)})) (conj expended newcells))))))))
+            (recur (sort-by :cost (conj rest-frontier (map (fn [cell] {:cost (cost [cell] [x2 y2] traversable) :cells (conj (:cells route) cell)}) newcells))) (flatten (conj expended newcells)))))))))
