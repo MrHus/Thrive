@@ -10,6 +10,9 @@
   (:require [thrive.seagull :only (Seagull)])
   (:import (thrive.seagull Seagull))
   
+  (:require [thrive.bear :only (Bear)])
+  (:import (thrive.bear Bear))
+  
   (:import (java.awt.event MouseEvent))
   
   (:use seesaw.core)
@@ -27,6 +30,7 @@
 (def tiles 
 {
     :sea      {:color (color "blue")},
+    :forest   {:color (color "darkgreen")},
     :grass    {:color (color "green")},
     :lava     {:color (color "red")},
     :mountain {:color (color "gray")},
@@ -79,6 +83,11 @@
   Paintable
   (paint [this g]
     (paint-half-block g (:x this) (:y this) "white")))
+
+(extend-type Bear
+  Paintable
+  (paint [this g]
+    (paint-half-block g (:x this) (:y this) "brown")))
        
 (defn make-ui
   [on-close]

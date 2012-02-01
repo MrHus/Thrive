@@ -7,8 +7,13 @@
   (:use [thrive.cell :only (generate-unknown-world)])
   (:require [thrive.cell :only (Cell)])
   (:import (thrive.cell Cell))
+  
   (:require [thrive.seagull :only (Seagull)])
   (:import (thrive.seagull Seagull))
+
+  (:require [thrive.bear :only (Bear)])
+  (:import (thrive.bear Bear))
+  
   (:gen-class))
 
 ;;;;;;; References ;;;;;;;
@@ -102,9 +107,9 @@
    (Cell.  4,  7,  2,  :mountain,  0)
    (Cell.  5,  7,  2,  :mountain,  0)
    (Cell.  6,  7,  3,  :mountain,  0)
-   (Cell.  7,  7,  2,  :mountain,  0)
-   (Cell.  8,  7,  1,  :mountain,  0)
-   (Cell.  9,  7,  1,  :mountain,  0)
+   (Cell.  7,  7,  2,  :forest,  0)
+   (Cell.  8,  7,  1,  :forest,  0)
+   (Cell.  9,  7,  1,  :forest,  0)
  
    (Cell.  0,  8,  0,  :grass,     0)
    (Cell.  1,  8,  1,  :mountain,  0)
@@ -113,9 +118,9 @@
    (Cell.  4,  8,  0,  :grass,  0)
    (Cell.  5,  8,  0,  :grass,  0)
    (Cell.  6,  8,  0,  :grass,  0)
-   (Cell.  7,  8,  0,  :grass,  0)
-   (Cell.  8,  8,  0,  :grass,  0)
-   (Cell.  9,  8,  0,  :desert,  0)
+   (Cell.  7,  8,  0,  :forest,  0)
+   (Cell.  8,  8,  0,  :forest,  0)
+   (Cell.  9,  8,  0,  :forest,  0)
  
    (Cell.  0,  9,  0,  :grass,  0)
    (Cell.  1,  9,  0,  :grass,  0)
@@ -124,9 +129,9 @@
    (Cell.  4,  9,  0,  :grass,  0)
    (Cell.  5,  9,  0,  :grass,  0)
    (Cell.  6,  9,  0,  :grass,  0)
-   (Cell.  7,  9,  0,  :grass,  0)
-   (Cell.  8,  9,  0,  :grass,  0)
-   (Cell.  9,  9,  0,  :desert,  0)])
+   (Cell.  7,  9,  0,  :forest,  0)
+   (Cell.  8,  9,  0,  :forest,  0)
+   (Cell.  9,  9,  0,  :forest,  0)])
 
 (def world (ref 
 {
@@ -138,6 +143,7 @@
       (agent (Seagull. 0 0 0))
       (agent (Seagull. 5 5 0))
       (agent (Seagull. 9 9 0))
+      (agent (Bear. 9 9 0))
     ]
 }))
 
