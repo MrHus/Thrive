@@ -1,5 +1,6 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world live-world)])
+  (:import (java.io BufferedReader FileReader))
   
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
@@ -19,25 +20,30 @@
   (:use seesaw.graphics)
   (:use seesaw.color)
   (:gen-class))
-  
+
 (def cell-size 50)
 (def cell-half-size (/ cell-size 2))
 (def cell-0-8-size (* cell-size 0.8))
+(def use-sprites? true)
+(if use-sprites?
+  (def tile-sprite (javax.imageio.ImageIO/read (clojure.java.io/resource "img/tiles.png"))))
 
 (defprotocol Paintable
   "Defines something paintable"
   (paint [this g] "How something gets painted"))
 
+
+;{:key [x y width height]}
 (def tiles 
-{
-    :sea      {:color (color "blue")},
-    :forest   {:color (color "darkgreen")},
-    :grass    {:color (color "green")},
-    :lava     {:color (color "red")},
-    :mountain {:color (color "gray")},
-    :desert   {:color (color "yellow")},
-    :unknown  {:color (color "black")}
-})
+  {
+   :sea      {:color (color "blue")      :sprite [(* 32 3) 0 32 32]}
+   :forest   {:color (color "darkgreen") :sprite [(* 32 4) 0 32 32]},
+   :grass    {:color (color "green")     :sprite [(* 32 0) 0 32 32]},
+   :lava     {:color (color "red")       :sprite [(* 32 2) 0 32 32]},
+   :mountain {:color (color "gray")      :sprite [(* 32 6) 0 32 32]},
+   :desert   {:color (color "yellow")    :sprite [(* 32 1) 0 32 32]},
+   :unknown  {:color (color "black")}
+   })
 
 (defn paint-half-block
   "Paint a half block based on the x and y coordinates"
@@ -59,20 +65,28 @@
   (do
     (.setColor g (color circle-color))
     (.fillOval g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
+
+(defn get-tile 
+  [tile-sprite [x y width height]]
+  (.getSubimage tile-sprite x y width height))
   
+
 (defn paint-cells
   "Paint cells"
   [c g cells]
-  (doseq [cell cells]
-    (.setColor g ((tiles (:tile cell)) :color))
-    (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
-    (.drawRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
+  (doseq [cell cells]    
+    (let [coordinates ((tiles (:tile cell)) :sprite)]
+      (if (and use-sprites? (not (nil? coordinates)))
+         (.drawImage g (get-tile tile-sprite coordinates) (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size nil)
+        (do
+          (.setColor g ((tiles (:tile cell)) :color))
+          (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size))))
     (if (= :mountain (:tile cell))
       (do
         (.setColor g (color "black"))
         (.drawString g (str (:z cell)) (+ cell-half-size (* cell-size (:x cell))) (+ cell-half-size (* cell-size(:y cell))))))
     (if (not (zero? (:food cell)))
-      (paint-half-block g (:x cell) (:y cell) "orange"))))
+       (paint-half-block g (:x cell) (:y cell) "orange"))))
 
 (defn paint-world 
   "Paints the world.
@@ -96,8 +110,8 @@
 (extend-type Bear
   Paintable
   (paint [this g]
-    (paint-half-block g (:x this) (:y this) "saddlebrown")))
-       
+         (paint-half-block g (:x this) (:y this) "saddlebrown")))
+
 (defn make-ui
   [on-close]
   (frame 
@@ -105,8 +119,8 @@
     :width 515 :height 539
     :on-close on-close
     :content 
-      (border-panel
-        :center (canvas :id :world-canvas,
+    (border-panel
+      :center (canvas :id :world-canvas,
                         :background "#ffffff", 
                         :paint paint-world))))
 
@@ -124,11 +138,11 @@
   (let [x (- (. e getX) 3)
         y (- (. e getY) 24)]
     (doseq [actor (:actors @world)]
-     (let [ax (+ (* cell-size (:x @actor)) (/ cell-half-size 2)) 
-           ay (+ (* cell-size (:y @actor)) (/ cell-half-size 2))]
+      (let [ax (+ (* cell-size (:x @actor)) (/ cell-half-size 2)) 
+            ay (+ (* cell-size (:y @actor)) (/ cell-half-size 2))]
         (if (and (> x ax) (< x (+ ax cell-half-size)) (> y ay) (< y (+ ay cell-half-size)))
           (handle-hit-on-actor actor))))))
-                   
+
 (defn add-behaviors
   [root]
   (let [t (timer (fn [_] (repaint! (select root [:#world-canvas]))) :delay 60 :start? true, :repeats? true)]
