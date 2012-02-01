@@ -96,7 +96,7 @@
 (extend-type Bear
   Paintable
   (paint [this g]
-    (paint-half-block g (:x this) (:y this) "brown")))
+    (paint-half-block g (:x this) (:y this) "saddlebrown")))
        
 (defn make-ui
   [on-close]
