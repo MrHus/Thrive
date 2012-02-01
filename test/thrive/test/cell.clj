@@ -48,7 +48,19 @@
  	(is (= [{:x 0 :y 0}, {:x 1 :y 0}, {:x 0 :y 1}] (surrounding-cells-by-mask 0 0 mask world-size)))
  	(is (= [{:x 2 :y 2}, {:x 1 :y 2}, {:x 2 :y 1}] (surrounding-cells-by-mask 2 2 mask world-size))))
 
-	 
+(def movement {:stay [0, 0], :left [-1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
+(def traversable {:grass 1, :forest 2, :mountain 3, :desert 2 :sea 5, :unknown 25, :lava false})
+
+(def test-world-known
+  [(Cell. 0 0 0 :lava 0),  (Cell. 1 0 0 :mountain 0),  (Cell. 2 0 0 :grass 0), 
+   (Cell. 0 1 0 :grass 0), (Cell. 1 1 2 :mountain 0),  (Cell. 2 1 0 :grass 0),
+   (Cell. 0 2 0 :grass 0), (Cell. 1 2 3 :mountain 0),  (Cell. 2 2 0 :grass 0)])
+ 
+(deftest find-moveable-cells-test
+  (is (= [(Cell. 0 2 0 :grass 0), (Cell. 1 2 3 :mountain 0), (Cell. 0 1 0 :grass 0)] (find-moveable-cells [0 2] movement traversable test-world-known world-size)))
+  (is (= [(Cell. 1 1 2 :mountain 0) (Cell. 0 1 0 :grass 0) (Cell. 2 1 0 :grass 0) (Cell. 1 0 0 :mountain 0) (Cell. 1 2 3 :mountain 0)] (find-moveable-cells [1 1] movement traversable test-world-known world-size)))
+  (is (= [(Cell. 1 0 0 :mountain 0) (Cell. 2 0 0 :grass 0) (Cell. 1 1 2 :mountain 0)] (find-moveable-cells [1 0] movement traversable test-world-known world-size)))) 
+ 
 (deftest generate-unkown-world-test
   ;; count is correct should be x * x 
   (is (= 9 (count (generate-unknown-world 3))))

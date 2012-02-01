@@ -62,13 +62,6 @@
   (is (= (calculate-cost [{:cells [(Cell. 2 0 0 :grass 0)]}] [6 0] traversable) [{:cost 5 :cells [(Cell. 2 0 0 :grass 0)]}]))
   )
 
-;A test for a function now moved to cell
-(deftest test-find-moveable-cells
-   (is (= (find-moveable-cells [1 1] movement traversable simple-world simple-world-size) [(Cell. 1 2 0 :grass 0)]))
-   (is (= (find-moveable-cells [1 2] movement traversable simple-world simple-world-size) [(Cell. 1 3 0 :grass 0) (Cell. 1 1 0 :grass 0)]))
-   (is (= (find-moveable-cells [1 6] movement traversable simple-world simple-world-size) [(Cell. 1 5 0 :grass 0)]))
-  )
-
 (deftest test-get-frontier
   (is (= (get-frontier [1 1] [1 6] movement traversable simple-world simple-world-size) [{:cost 5 :cells [(Cell. 1 2 0 :grass 0)]}]))
   (is (= (get-frontier [1 6] [1 1] movement traversable simple-world simple-world-size) [{:cost 5 :cells [(Cell. 1 5 0 :grass 0)]}]))
