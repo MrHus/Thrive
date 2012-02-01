@@ -17,8 +17,8 @@
   "A seagul moves to a random place, to annoy people."
   [^Seagull s, actual-world, world-size]
   (let [movement-options (vec (surrounding-cells-by-mask (:x s) (:y s) movement world-size))
-       size (dec (count movement-options))
-       dest (get movement-options (int (rand size)))]
+       size (count movement-options);(dec (count movement-options))
+       dest (get movement-options (rand-int size))];no need to decrese rand-int between 0 (inclusive) and n (exclusive).
    (assoc s :x (:x dest) :y (:y dest))))
 
 (defn is-alive?

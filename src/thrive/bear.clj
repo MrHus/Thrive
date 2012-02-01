@@ -19,8 +19,11 @@
   "A bear moves to a random place, in the woods, to eat people."
   [^Bear s, actual-world, world-size]
   (let [movement-options (vec (map #(vector (:x %) (:y %)) (find-moveable-cells [(:x s) (:y s)] movement traversable actual-world world-size)))
-        size (dec (count movement-options))
-        [x y] (get movement-options (int (rand size)))]
+        size  (count movement-options)
+        [x y] (get movement-options (rand-int size))]
+    (println size)
+    (println movement-options)
+    (println [x y])
     (assoc s :x x :y y)))
 
 (defn is-alive?
