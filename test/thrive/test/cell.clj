@@ -48,7 +48,7 @@
  	(is (= [{:x 0 :y 0}, {:x 1 :y 0}, {:x 0 :y 1}] (surrounding-cells-by-mask 0 0 mask world-size)))
  	(is (= [{:x 2 :y 2}, {:x 1 :y 2}, {:x 2 :y 1}] (surrounding-cells-by-mask 2 2 mask world-size))))
 
-(def movement {:stay [0, 0], :left [-1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
+(def movement [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]])
 (def traversable {:grass 1, :forest 2, :mountain 3, :desert 2 :sea 5, :unknown 25, :lava false})
 
 (def test-world-known

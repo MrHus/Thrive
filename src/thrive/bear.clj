@@ -12,7 +12,7 @@
 	z      ;; The z position on the world, is equal to height of the tile.
 ])
 
-(def movement {:left [-1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
+(def movement [[-1, 0], [1, 0], [0, -1], [0, 1]])
 (def traversable {:grass false :forest 1 :mountain false :desert false :sea false :unknown 1 :lava false})
 
 (defn ^Bear live-bear

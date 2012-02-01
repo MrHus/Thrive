@@ -11,7 +11,7 @@
    (Cell. 0 1 0 :grass 0),  (Cell. 1 1 0 :lava 0),   (Cell. 2 1 0 :sea 0),
    (Cell. 0 2 0 :grass 0),   (Cell. 1 2 0 :sea 0),    (Cell. 2 2 0 :sea 0)])
 
-(def movement {:stay [0 0], :left [0 -1], :right [0 1], :up [-1 0], :down [1 0]})
+(def movement [[0 0], [0 -1], [0 1], [-1 0], [1 0]])
 (def traversable {:grass 1, :mountain 3, :sea 15, :desert 2, :lava false})
 
 (deftest get-plan-test

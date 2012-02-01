@@ -59,7 +59,7 @@
    The route is a vector of vectors: [[0 1] [2 0] [3 5]].
    If no route can be found it will return an emtpy list."
   [x y dx dy movement traversable world world-size]
-  (let [max-value-mask (for [[k v] movement :when (not= v [0 0])] v)
+  (let [max-value-mask (for [v movement :when (not= v [0 0])] v)
         world (value-iteration dx dy max-value-mask traversable world world-size)
         start (find-cell x y world world-size)
         goal  (find-cell dx dy world world-size)]        

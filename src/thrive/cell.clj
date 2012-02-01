@@ -53,7 +53,7 @@
   (vec 
     (filter 
       #(not (false? ((:tile %) traversable))) 
-      (find-cells world (surrounding-cells-by-mask x y (vals movement) world-size) world-size))))
+      (find-cells world (surrounding-cells-by-mask x y movement world-size) world-size))))
 
 (defn generate-unknown-world
   "Generates an uknown square world the size is determined by the first argument"
