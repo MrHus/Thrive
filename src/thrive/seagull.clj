@@ -15,11 +15,11 @@
 
 (defn ^Seagull live-seagul
   "A seagul moves to a random place, to annoy people."
-	[^Seagull s, actual-world, world-size]
-	(let [movement-options (vec (surrounding-cells-by-mask (:x s) (:y s) movement world-size))
-			  size (dec (count movement-options))
-				dest (get movement-options (int (rand size)))]
-		(assoc s :x (:x dest) :y (:y dest))))
+  [^Seagull s, actual-world, world-size]
+  (let [movement-options (vec (surrounding-cells-by-mask (:x s) (:y s) movement world-size))
+       size (dec (count movement-options))
+       dest (get movement-options (int (rand size)))]
+   (assoc s :x (:x dest) :y (:y dest))))
 
 (defn is-alive?
   [^Seagull s]

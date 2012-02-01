@@ -143,7 +143,7 @@
       (agent (Seagull. 0 0 0))
       (agent (Seagull. 5 5 0))
       (agent (Seagull. 9 9 0))
-      (agent (Bear. 9 9 0))
+      (agent (Bear. 8 8 0))
     ]
 }))
 

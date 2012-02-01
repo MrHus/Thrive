@@ -19,7 +19,7 @@
     (paint-cells c g (:world human))
     (paint-half-block g (:x human) (:y human) "pink")
     (paint-plan-human g human)
-    (paint-half-block g (first (:city human)) (last (:city human)) "purple")))
+    (paint-0-8-block g (first (:city human)) (last (:city human)) "purple")))
   
 (defn show-human-detail
   []

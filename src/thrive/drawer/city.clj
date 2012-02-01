@@ -3,7 +3,7 @@
 (extend-type City
   Paintable
   (paint [this g]
-    (paint-half-block g (:x this) (:y this) "purple")))
+    (paint-0-8-block g (:x this) (:y this) "purple")))
 
 ;; Will be an atom that points to an agent. Aka a ref to a ref!
 (def selected-city (atom nil))

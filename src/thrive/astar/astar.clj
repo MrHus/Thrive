@@ -33,17 +33,6 @@
   [value map]
   (if (some #(= value %) map) true (if (and (or (map? value) (vector? value) (list? value)) (some #(= value (val %)) map)) true false)))
 
-(defn find-moveable-cells
-  [[x y] movement traversable world world-size]
-  (into [] (filter #(not= ((:tile %) traversable) false) (find-cells 
-                                                           world 
-                                                           (surrounding-cells-by-mask 
-                                                             x y
-                                                             (map #(val %) movement) 
-                                                             world-size)
-                                                           world-size)
-                   )))
-
 (defn get-frontier
   [[x1 y1] [x2 y2] movement traversable world world-size]
   (sort-by :cost (into [] (map #(let [cost (cost [%] [x2 y2] traversable)] {:cost cost :cells [%]}) (find-moveable-cells [x1 y1] movement traversable world world-size)))))

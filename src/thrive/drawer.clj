@@ -22,6 +22,7 @@
   
 (def cell-size 50)
 (def cell-half-size (/ cell-size 2))
+(def cell-0-8-size (* cell-size 0.8))
 
 (defprotocol Paintable
   "Defines something paintable"
@@ -45,6 +46,13 @@
     (.setColor g (color block-color))
     (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
 
+(defn paint-0-8-block
+  "Paint a 0.8 block based on the x and y coordinates"
+  [g x y block-color]
+  (do
+    (.setColor g (color block-color))
+    (.fillRect g (+ (* cell-size x) (/ (- cell-size cell-0-8-size) 2)) (+ (* cell-size y) (/ (- cell-size cell-0-8-size) 2)) cell-0-8-size cell-0-8-size)))
+
 (defn paint-half-circle
   "Paint a half circle based on the x and y coordinates"
   [g x y circle-color]
@@ -58,6 +66,7 @@
   (doseq [cell cells]
     (.setColor g ((tiles (:tile cell)) :color))
     (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
+    (.drawRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size)
     (if (= :mountain (:tile cell))
       (do
         (.setColor g (color "black"))
@@ -93,7 +102,7 @@
   [on-close]
   (frame 
     :title "Thrive" 
-    :width 500 :height 500 
+    :width 515 :height 539
     :on-close on-close
     :content 
       (border-panel

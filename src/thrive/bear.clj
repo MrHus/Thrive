@@ -1,6 +1,8 @@
 (ns thrive.bear
   (:use thrive.actor)
-	(:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food, surrounding-cells-by-mask)])
+  (:use [thrive.cell])
+  (:require [thrive.cell :only (Cell)])
+  (:import (thrive.cell Cell))
   (:gen-class))
 
 (defrecord Bear
@@ -10,16 +12,16 @@
 	z      ;; The z position on the world, is equal to height of the tile.
 ])
 
-(def movement [[0, 0], [0, -1] [0, 1] [-1, 0] [1, 0]])
-(def traversable {:grass false, :forest 1, :mountain false, :desert false :sea false, :unknown 1, :lava false})
+(def movement {:left [-1, 0], :right [1, 0], :up [0, -1], :down [0, 1]})
+(def traversable {:grass false :forest 1 :mountain false :desert false :sea false :unknown 1 :lava false})
 
 (defn ^Bear live-bear
   "A bear moves to a random place, in the woods, to eat people."
-	[^Bear s, actual-world, world-size]
-	(let [movement-options (vec (surrounding-cells-by-mask (:x s) (:y s) movement world-size))
-			  size (dec (count movement-options))
-				dest (get movement-options (int (rand size)))]
-		(assoc s :x (:x dest) :y (:y dest))))
+  [^Bear s, actual-world, world-size]
+  (let [movement-options (vec (map #(vector (:x %) (:y %)) (find-moveable-cells [(:x s) (:y s)] movement traversable actual-world world-size)))
+        size (dec (count movement-options))
+        [x y] (get movement-options (int (rand size)))]
+    (assoc s :x x :y y)))
 
 (defn is-alive?
   [^Bear s]

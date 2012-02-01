@@ -48,6 +48,17 @@
 			     dy (last %)]
 			  {:x (+ x dx) :y (+ y dy)}) mask)))
 
+(defn find-moveable-cells
+  [[x y] movement traversable world world-size]
+  (into [] (filter #(not= ((:tile %) traversable) false) (find-cells 
+                                                           world 
+                                                           (surrounding-cells-by-mask 
+                                                             x y
+                                                             (map #(val %) movement) 
+                                                             world-size)
+                                                           world-size)
+                   )))
+
 (defn generate-unknown-world
   "Generates an uknown square world the size is determined by the first argument"
   [size]
