@@ -11,6 +11,9 @@
    (Cell. 0 1 0 :grass 0), (Cell. 1 1 2 :mountain 2),  (Cell. 2 1 0 :unknown 0),
    (Cell. 0 2 0 :grass 0), (Cell. 1 2 3 :mountain 5),  (Cell. 2 2 0 :unknown 0)])
 
+(deftest find-destination-test
+  (is (= {:x 9 :y 1} (find-destination {:x 8, :y 1, :city [9 1], :action :scout} test-world))))
+
 (deftest is-move-valid?-test
   ;; Walk in lava
   (is (= false (is-move-valid? 0 1 0 0 0 test-world world-size)))
