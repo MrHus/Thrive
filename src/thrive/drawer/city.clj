@@ -17,7 +17,7 @@
   []
   (frame
     :title "City detail"
-    :width 500 :height 500
+    :width 515 :height 539
     :on-close :hide
     :content
       (border-panel
