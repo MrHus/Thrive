@@ -36,7 +36,7 @@
 
 (defn find-destination
   [world]
-  {:x 9 :y 1})
+  (rand-nth world))
 
 (defn observe
   "A human can observe left, right up, and down. This function alters
