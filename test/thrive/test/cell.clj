@@ -30,6 +30,10 @@
   (is (= 3 (count (cells-with-food test-world))))
   (is (= (Cell. 1 0 0 :unknown 15)) (first (cells-with-food test-world))))
 
+(deftest unknown-cells-test
+  (is (= 9 (count (unknown-cells test-world))))
+  (is (= (every? #(= (:tile %) :unknown) (unknown-cells test-world)))))
+
 (def unknown-world-size-three
   [(Cell. 0 0 0 :unknown 0), (Cell. 1 0 0 :unknown 0), (Cell. 2 0 0 :unknown 0), 
    (Cell. 0 1 0 :unknown 0), (Cell. 1 1 0 :unknown 0), (Cell. 2 1 0 :unknown 0),

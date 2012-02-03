@@ -31,6 +31,11 @@
   [actual-world coll world-size]
   (map #(find-cell (:x %) (:y %) actual-world world-size) coll))
 
+(defn unknown-cells
+  "Returns all unknown Cells of the world."
+  [world]
+  (filter #(= (:tile %1) :unknown) world))
+
 (defn cells-with-food
   "Gets all the Cells with food from the world."
   [world]

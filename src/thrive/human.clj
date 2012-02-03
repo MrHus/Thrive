@@ -1,6 +1,6 @@
 (ns thrive.human
   (:use thrive.actor)
-  (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food, surrounding-cells-by-mask)])
+  (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
   (:use [thrive.planner :only (get-plan)])
   (:gen-class))
 
@@ -19,7 +19,7 @@
 
 (def movement [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]])
 (def traversable {:grass 1, :forest 2, :mountain 3, :desert 2 :sea 5, :unknown 25, :lava false})
-(def actions [:scavenge-food , :scout , :hungry ])
+(def actions [:scavenge-food, :scout, :hungry, :city])
 (def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person, format is [x, y]
 
 (defn is-move-valid?
@@ -35,8 +35,12 @@
       (not= false (traversable (:tile dest))))))
 
 (defn find-destination
-  [world]
-  (rand-nth world))
+  [^Human p, world]
+  (if (= [(:x p) (:y p)] (:city p))
+    (if (= (:action p) :scout)
+      (rand-nth (unknown-cells world))
+      (first (cells-with-food world)))
+    {:x ((:city p) 0) :y ((:city p) 1)}))
 
 (defn observe
   "A human can observe left, right up, and down. This function alters
@@ -53,7 +57,7 @@
    location stored in the movement/detail-plan/walk-path vector"
   [^Human p, world-size]
   (if (empty? (:movement p))
-    (let [dest (find-destination (:world p))]
+    (let [dest (find-destination p (:world p))]
       (assoc p :movement (get-plan (:planner p) (:x p) (:y p) (:x dest) (:y dest) movement traversable (:world p) world-size)))
     (let [plan (first (:movement p))]
       (if (is-move-valid? p (plan 0) (plan 1) (:world p) world-size)
