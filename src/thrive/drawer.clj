@@ -26,7 +26,7 @@
 (def cell-0-8-size (* cell-size 0.8))
 (def use-sprites? true)
 (if use-sprites?
-  (def tile-sprite (javax.imageio.ImageIO/read (clojure.java.io/resource "img/tiles.png"))))
+  (def tile-sprite (javax.imageio.ImageIO/read (clojure.java.io/resource "img/tiles.big.png"))))
 
 (defprotocol Paintable
   "Defines something paintable"
@@ -36,12 +36,12 @@
 ;{:key [x y width height]}
 (def tiles 
   {
-   :sea      {:color (color "blue")      :sprite [(* 32 3) 0 32 32]}
-   :forest   {:color (color "darkgreen") :sprite [(* 32 4) 0 32 32]},
-   :grass    {:color (color "green")     :sprite [(* 32 0) 0 32 32]},
-   :lava     {:color (color "red")       :sprite [(* 32 2) 0 32 32]},
-   :mountain {:color (color "gray")      :sprite [(* 32 6) 0 32 32]},
-   :desert   {:color (color "yellow")    :sprite [(* 32 1) 0 32 32]},
+   :sea      {:color (color "blue")      :sprite [(* 36 3) 0 36 36]}
+   :forest   {:color (color "darkgreen") :sprite [(* 36 4) 0 36 36]},
+   :grass    {:color (color "green")     :sprite [(* 36 0) 0 36 36]},
+   :lava     {:color (color "red")       :sprite [(* 36 2) 0 36 36]},
+   :mountain {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
+   :desert   {:color (color "yellow")    :sprite [(* 36 1) 0 36 36]},
    :unknown  {:color (color "black")}
    })
 
@@ -77,7 +77,7 @@
   (doseq [cell cells]    
     (let [coordinates ((tiles (:tile cell)) :sprite)]
       (if (and use-sprites? (not (nil? coordinates)))
-         (.drawImage g (get-tile tile-sprite coordinates) (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size nil)
+         (.drawImage g (get-tile tile-sprite coordinates) (-(* cell-size (:x cell))  3) (- (* cell-size (:y cell)) 3) (+ 6 cell-size) (+ 6 cell-size) nil)
         (do
           (.setColor g ((tiles (:tile cell)) :color))
           (.fillRect g (* cell-size (:x cell)) (* cell-size (:y cell)) cell-size cell-size))))
