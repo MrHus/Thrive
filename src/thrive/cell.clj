@@ -36,10 +36,34 @@
   [world]
   (filter #(= (:tile %1) :unknown) world))
 
+(defn closed-cell
+  "Get the closed cell"
+  [[x y] cells]
+  (first (sort-by :lenght (map (fn [cell] 
+                                 {:steps (+ (Math/abs ^Integer (- (:x cell) x)) 
+                                            (Math/abs ^Integer (- (:y cell) y))) :cell cell}) 
+                               cells)
+                  )))
+
+(defn closed-unknown-cells
+  "Return the closed unkown cells of the given world"
+  [[x y] world]
+  (let [unknown-cells (unknown-cells world)]
+    (if (zero? (count unknown-cells))
+      []
+      (closed-cell [x y] unknown-cells))))
+
 (defn cells-with-food
   "Gets all the Cells with food from the world."
   [world]
   (filter #(> (:food %1) 0) world))
+
+(defn closed-cell-with-food
+  [[x y] world]
+  (let [food-cells (cells-with-food world)]
+    (if (zero? (count food-cells))
+      []
+      (closed-cell [x y] food-cells))))
 
 (defn surrounding-cells-by-mask
   "Gets the surrounding cell's of a specific cell. What the surroundings cells are 
@@ -48,10 +72,10 @@
   [x, y, mask, world-size]
   (filter
     #(and (>= (:x %) 0) (< (:x %) world-size) (>= (:y %) 0) (< (:y %) world-size))
-	(map 
-		#(let [dx (first %)
-			     dy (last %)]
-			  {:x (+ x dx) :y (+ y dy)}) mask)))
+    (map 
+   #(let [dx (first %)
+          dy (last %)]
+      {:x (+ x dx) :y (+ y dy)}) mask)))
 
 (defn find-moveable-cells
   [[x y] movement traversable world world-size]

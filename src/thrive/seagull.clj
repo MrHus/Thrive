@@ -30,3 +30,5 @@
   (live [this world world-size] (live-seagul this (:cells @world) world-size))
   (interval [this] 1000)
   (alive? [this] (is-alive? this)))
+
+

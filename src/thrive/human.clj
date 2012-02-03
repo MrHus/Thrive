@@ -19,7 +19,7 @@
 
 (def movement [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]])
 (def traversable {:grass 1, :forest 2, :mountain 3, :desert 2 :sea 5, :unknown 25, :lava false})
-(def actions [:scavenge-food, :scout, :hungry, :city])
+(def actions [:scavenge-food, :scout, :hungry-scout, :hungry, :city])
 (def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person, format is [x, y]
 
 (defn is-move-valid?
@@ -28,7 +28,7 @@
    move is valid. A move is invalid when traversable for that :tile
    returns false.
    It is assumed that the dx and dy are neighbors of x and y"
-  ([^Human p dx dy world world-size]
+  ([^Human p [dx dy] world world-size]
    (is-move-valid? (:x p) (:y p) (:z p) dx dy world world-size))
   ([x y z dx dy world world-size]
     (let [^Cell dest (find-cell dx dy world world-size)]
@@ -50,12 +50,36 @@
         p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-size) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
+(defn walk  
+  [^Human p]
+  (let [step (first (:movement p))]
+    (if (is-move-valid? p step (:world p) world-size)
+      (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
+      (assoc p :movement []))))
+
 (defn ^Human think
   "A human decides a course of action based on his current state.
    Still needs to have/obtain a destination (currently set for the city).
    Then walk function needs to be updated so that Human moves to the first
    location stored in the movement/detail-plan/walk-path vector"
   [^Human p, world-size]
+  (let [food-location (closed-cell-with-food  [(:x p) (:y p)]  (:world p))]
+    (if (zero? (count food-location))
+      (let [action :scout
+            closed-unknow-cell (closed-unknown-cells [(:x p) (:y p)] world) 
+            scout-route (get-plan (:planner p) (:x p) (:y p) (:x closed-unknow-cell) (:y closed-unknow-cell) movement traversable (:world p) world-size)]
+        (assoc p :action action :movement scout-route ))
+      (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closed-food-cell) (:y closed-food-cell) movement traversable (:world p) world-size)]
+      (if (< (:food p) (count food-path))
+        
+        (let [action :hungry
+              closed-food-cell ]
+          )
+        )
+      ))))
+
+  
+  
   (if (empty? (:movement p))
     (let [dest (find-destination p (:world p))]
       (assoc p :movement (get-plan (:planner p) (:x p) (:y p) (:x dest) (:y dest) movement traversable (:world p) world-size)))
@@ -66,7 +90,7 @@
 
 (defn is-alive?
   [^Human p]
-  true)
+  (> (:food p) 0))
 
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
