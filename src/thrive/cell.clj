@@ -39,11 +39,11 @@
 (defn closed-cell
   "Get the closed cell"
   [[x y] cells]
-  (first (sort-by :lenght (map (fn [cell] 
+  (:cell (first (sort-by :steps (map (fn [cell] 
                                  {:steps (+ (Math/abs ^Integer (- (:x cell) x)) 
                                             (Math/abs ^Integer (- (:y cell) y))) :cell cell}) 
                                cells)
-                  )))
+                  ))))
 
 (defn closed-unknown-cells
   "Return the closed unkown cells of the given world"

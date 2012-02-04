@@ -1,6 +1,6 @@
 (ns thrive.human
   (:use thrive.actor)
-  (:use [thrive.cell :only (find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
+  (:use [thrive.cell :only (closed-cell-with-food, closed-unknown-cells, find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
   (:use [thrive.planner :only (get-plan)])
   (:gen-class))
 
@@ -17,6 +17,7 @@
   planner  ;; Defines which pathfinding algorithm the human knows
 ])
 
+(def max-food-in-backpack 50)
 (def movement [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]])
 (def traversable {:grass 1, :forest 2, :mountain 3, :desert 2 :sea 5, :unknown 25, :lava false})
 (def actions [:scavenge-food, :scout, :hungry-scout, :hungry, :city])
@@ -50,43 +51,49 @@
         p-world (reduce #(assoc %1 (find-cell-loc (:x %2) (:y %2) world-size) %2) (:world p) observed-cells)]
     (assoc p :world p-world)))
 
-(defn walk  
-  [^Human p]
-  (let [step (first (:movement p))]
-    (if (is-move-valid? p step (:world p) world-size)
-      (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
-      (assoc p :movement []))))
-
 (defn ^Human think
   "A human decides a course of action based on his current state.
    Still needs to have/obtain a destination (currently set for the city).
    Then walk function needs to be updated so that Human moves to the first
    location stored in the movement/detail-plan/walk-path vector"
   [^Human p, world-size]
-  (let [food-location (closed-cell-with-food  [(:x p) (:y p)]  (:world p))]
-    (if (zero? (count food-location))
-      (let [action :scout
-            closed-unknow-cell (closed-unknown-cells [(:x p) (:y p)] world) 
-            scout-route (get-plan (:planner p) (:x p) (:y p) (:x closed-unknow-cell) (:y closed-unknow-cell) movement traversable (:world p) world-size)]
-        (assoc p :action action :movement scout-route ))
-      (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closed-food-cell) (:y closed-food-cell) movement traversable (:world p) world-size)]
-      (if (< (:food p) (count food-path))
-        
-        (let [action :hungry
-              closed-food-cell ]
-          )
-        )
-      ))))
-
-  
-  
   (if (empty? (:movement p))
-    (let [dest (find-destination p (:world p))]
-      (assoc p :movement (get-plan (:planner p) (:x p) (:y p) (:x dest) (:y dest) movement traversable (:world p) world-size)))
-    (let [plan (first (:movement p))]
-      (if (is-move-valid? p (plan 0) (plan 1) (:world p) world-size)
-        (assoc p :x (plan 0) :y (plan 1) :movement (rest (:movement p)))
-        (assoc p :movement (get-plan (:planner p) (:x p) (:y p) 9 1 movement traversable (:world p) world-size))))))
+    (if (>= (:food p) max-food-in-backpack)
+      (do 
+        (println "Lots of food -> back to city")
+        (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size)))
+      (let [closed-food-cell (closed-cell-with-food  [(:x p) (:y p)]  (:world p))]
+        (println closed-food-cell)
+        (if (empty? closed-food-cell)
+          (let [action :scout
+                closed-unknow-cell (closed-unknown-cells [(:x p) (:y p)] (:world p))]
+            (println closed-unknow-cell)
+            (let
+              [scout-route (get-plan (:planner p) (:x p) (:y p) (:x closed-unknow-cell) (:y closed-unknow-cell) movement traversable (:world p) world-size)]
+              (println "no food time to scout " closed-unknow-cell)
+              (assoc p :action action :movement scout-route)))
+          (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closed-food-cell) (:y closed-food-cell) movement traversable (:world p) world-size)]
+            (println "food path " food-path) 
+            (assoc p :action :scavenge-food :movement food-path)
+            ))))    
+    (do 
+      (println "return p " p)
+      p)))
+
+(defn walk  
+  [^Human p world-size]
+  (let [step (first (:movement p))]
+    (if (is-move-valid? p step (:world p) world-size)
+      (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
+      (think (assoc p :movement []) world-size))))
+
+;  (if (empty? (:movement p))
+;    (let [dest (find-destination p (:world p))]
+;      (assoc p :movement (get-plan (:planner p) (:x p) (:y p) (:x dest) (:y dest) movement traversable (:world p) world-size)))
+;    (let [plan (first (:movement p))]
+;      (if (is-move-valid? p (plan 0) (plan 1) (:world p) world-size)
+;        (assoc p :x (plan 0) :y (plan 1) :movement (rest (:movement p)))
+;        (assoc p :movement (get-plan (:planner p) (:x p) (:y p) 9 1 movement traversable (:world p) world-size))))))
 
 (defn is-alive?
   [^Human p]
@@ -95,7 +102,7 @@
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
   [^Human p, actual-world world-size]
-  (time (think (observe p actual-world world-size) world-size)))
+  (time (walk (think (observe p actual-world world-size) world-size) world-size)))
 
 (extend-type Human
   Actor
