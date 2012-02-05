@@ -73,7 +73,7 @@
               (println "no food time to scout " closed-unknow-cell)
               (assoc p :action action :movement scout-route)))
           (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closed-food-cell) (:y closed-food-cell) movement traversable (:world p) world-size)]
-            (println "food path " food-path) 
+            (println "food path " food-path)
             (assoc p :action :scavenge-food :movement food-path)
             ))))    
     (do 

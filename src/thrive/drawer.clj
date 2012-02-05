@@ -1,5 +1,5 @@
 (ns thrive.drawer
-  (:use [thrive.core :only (world live-world)])
+  (:use [thrive.core :only (world live-world cleanup-dead)])
   (:import (java.io BufferedReader FileReader))
   
   (:require [thrive.human :only (Human)])
@@ -161,6 +161,7 @@
   [& args]
   (do
     (live-world)
+    (cleanup-dead)
     (app :exit)))
 
 (if (= (System/getProperty "os.name") "Windows 7") (-main))

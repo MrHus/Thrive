@@ -1,5 +1,5 @@
 (ns thrive.core
-  (:use [thrive.actor :only (loop-actor)])
+  (:use [thrive.actor :only (loop-actor, living-actors, alive?)])
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
   (:require [thrive.city :only (City)])
@@ -139,6 +139,7 @@
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
       (agent (Human. 0 0 0 5 unknown-world [9 1] :scout [] :a*))
+      (agent (Human. 3 3 0 0 unknown-world [9 1] :scout [] :mdp))
       (agent (Human. 0 4 0 155 test-world [9 1] :city [] :a*))
       (agent (Seagull. 0 0 0))
       (agent (Seagull. 5 5 0))
@@ -147,8 +148,34 @@
     ]
 }))
 
+(defn watch-actors
+  "Teh world subscribes to changes of it's actors."
+  []
+  (dotimes [i (count (:actors @world))]
+    (add-watch
+     ((:actors @world) i)
+     :alive
+     (fn [k r o n]
+       (do
+         ;(println "key => "  k)
+         ;(println "reference => "  r)
+         ;(println "old => " o)
+         ;(println "new => " n)
+         (if (false? (alive? n))
+           (do
+             (println "Dead")
+             (remove r (:actors @world)))))))))
+
+(defn cleanup-dead
+  "Removes dead actors in the world."
+  []
+  (do
+    (watch-actors)
+    ;(assoc @world :actors (living-actors (:actors @world)))
+    ))
+
 (defn live-world
   "Sets the actors in motion."
   []  
   (doseq [actor (:actors @world)]
-    (send-off actor loop-actor world world-size)))    
+    (send-off actor loop-actor world world-size)))

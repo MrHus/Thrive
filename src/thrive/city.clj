@@ -24,7 +24,7 @@
 
 (defn is-alive?
   [^City c]
-  true)
+  (> (:food c) 0))
 
 (extend-type City
   Actor
