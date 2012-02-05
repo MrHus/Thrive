@@ -85,15 +85,7 @@
   (let [step (first (:movement p))]
     (if (is-move-valid? p step (:world p) world-size)
       (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
-      (think (assoc p :movement []) world-size))))
-
-;  (if (empty? (:movement p))
-;    (let [dest (find-destination p (:world p))]
-;      (assoc p :movement (get-plan (:planner p) (:x p) (:y p) (:x dest) (:y dest) movement traversable (:world p) world-size)))
-;    (let [plan (first (:movement p))]
-;      (if (is-move-valid? p (plan 0) (plan 1) (:world p) world-size)
-;        (assoc p :x (plan 0) :y (plan 1) :movement (rest (:movement p)))
-;        (assoc p :movement (get-plan (:planner p) (:x p) (:y p) 9 1 movement traversable (:world p) world-size))))))
+      (assoc p :movement []) world-size)))
 
 (defn is-alive?
   [^Human p]
