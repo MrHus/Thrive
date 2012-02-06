@@ -36,8 +36,8 @@
   [world]
   (filter #(= (:tile %1) :unknown) world))
 
-(defn closed-cell
-  "Get the closed cell"
+(defn closest-cell
+  "Get the closest cell"
   [[x y] cells]
   (:cell (first (sort-by :steps (map (fn [cell] 
                                  {:steps (+ (Math/abs ^Integer (- (:x cell) x)) 
@@ -45,28 +45,28 @@
                                cells)
                   ))))
 
-(defn closed-unknown-cells
-  "Return the closed unkown cells of the given world"
+(defn closest-unknown-cells
+  "Return the closest unknown cells of the given world"
   [[x y] world]
   (let [unknown-cells (unknown-cells world)]
     (if (zero? (count unknown-cells))
       []
-      (closed-cell [x y] unknown-cells))))
+      (closest-cell [x y] unknown-cells))))
 
 (defn cells-with-food
   "Gets all the Cells with food from the world."
   [world]
   (filter #(> (:food %1) 0) world))
 
-(defn closed-cell-with-food
+(defn closest-cell-with-food
   [[x y] world]
   (let [food-cells (cells-with-food world)]
     (if (zero? (count food-cells))
       []
-      (closed-cell [x y] food-cells))))
+      (closest-cell [x y] food-cells))))
 
 (defn surrounding-cells-by-mask
-  "Gets the surrounding cell's of a specific cell. What the surroundings cells are 
+  "Gets the surrounding cells of a specific cell. What the surrounding cells are 
    is determinded by the mask argument. The cells returned are within the bounds of the world.
    Returns [{:x, :y} ...] of all cells within the mask and the bounds."
   [x, y, mask, world-size]
@@ -85,6 +85,6 @@
       (find-cells world (surrounding-cells-by-mask x y movement world-size) world-size))))
 
 (defn generate-unknown-world
-  "Generates an uknown square world the size is determined by the first argument"
+  "Generates an unknown square world, the size is determined by the first argument"
   [size]
   (vec (map #(Cell. (mod % size) (int (/ % size)) 0 :unknown 0) (range (* size size)))))

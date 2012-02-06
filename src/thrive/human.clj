@@ -1,6 +1,6 @@
 (ns thrive.human
   (:use thrive.actor)
-  (:use [thrive.cell :only (closed-cell-with-food, closed-unknown-cells, find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
+  (:use [thrive.cell :only (closest-cell-with-food, closest-unknown-cells, find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
   (:use [thrive.planner :only (get-plan)])
   (:gen-class))
 
@@ -58,14 +58,14 @@
   (if (empty? (:movement p))
     (if (>= (:food p) max-food-in-backpack)
       (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size))
-      (let [closed-food-cell (closed-cell-with-food  [(:x p) (:y p)]  (:world p))]
-        (if (empty? closed-food-cell)
+      (let [closest-food-cell (closest-cell-with-food  [(:x p) (:y p)]  (:world p))]
+        (if (empty? closest-food-cell)
           (let [action :scout
-                closed-unknow-cell (closed-unknown-cells [(:x p) (:y p)] (:world p))]
+                closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))]
             (let
-              [scout-route (get-plan (:planner p) (:x p) (:y p) (:x closed-unknow-cell) (:y closed-unknow-cell) movement traversable (:world p) world-size)]
+              [scout-route (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size)]
               (assoc p :action action :movement scout-route)))
-          (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closed-food-cell) (:y closed-food-cell) movement traversable (:world p) world-size)]
+          (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]
             (assoc p :action :scavenge-food :movement food-path)
             ))))
     p))
