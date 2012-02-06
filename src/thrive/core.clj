@@ -141,9 +141,10 @@
       (agent (Human. 0 0 0 5 unknown-world [9 1] :scout [] :a*))
       (agent (Human. 3 3 0 0 unknown-world [9 1] :scout [] :mdp))
       (agent (Human. 0 4 0 155 test-world [9 1] :city [] :a*))
-      (agent (Seagull. 0 0 0))
-      (agent (Seagull. 5 5 0))
-      (agent (Seagull. 9 9 0))
+      (agent (Human. 8 8 0 5 unknown-world [9 1] :city [] :a*))
+      (agent (Seagull. 0 0 0 true))
+      (agent (Seagull. 5 5 0 true))
+      (agent (Seagull. 9 9 0 true))
       (agent (Bear. 8 8 0))
     ]
 }))
