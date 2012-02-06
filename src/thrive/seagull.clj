@@ -25,17 +25,18 @@
         dest (get movement-options (rand-int size))]
     (let [x (:x s) 
           y (:y s)
-          alive (zero? (count (filter #(and (instance? Human @%) (= x (:x @%)) (= (:y @%))) (:actors actual-world))))]
+          alive (zero? (count (filter #(and (instance? Human @%) (= x (:x @%)) (= (:y @%))) (:actors actual-world))))] 
       (if alive
+        (assoc s :x (:x dest) :y (:y dest))
         (do
           (dosync 
             (let [cells(:cells actual-world)
                   item-number (find-cell-loc x y world-size)
                   used-item (find-cell x y cells world-size)
-                  alter-test-world (assoc-in cells [item-number] (assoc used-item :food worth-food-loot ))]
-              (alter actual-world assoc :cells alter-test-world)))
+                  alter-cells (assoc-in cells [item-number] (assoc used-item :food worth-food-loot ))]
+              (alter actual-world assoc :cells alter-cells)))
           (assoc s :alive alive))
-        (assoc s :x (:x dest) :y (:y dest))))))
+        ))))
 
 (defn is-alive?
   [^Seagull s]

@@ -144,7 +144,7 @@
       (agent (Human. 8 8 0 5 unknown-world [9 1] :city [] :a*))
       (agent (Seagull. 0 0 0 true))
       (agent (Seagull. 5 5 0 true))
-      (agent (Seagull. 9 9 0 true))
+      (agent (Seagull. 0 9 0 true))
       (agent (Bear. 8 8 0))
     ]
 }))
@@ -169,11 +169,12 @@
 
 (defn cleanup-dead
   "Removes dead actors in the world."
-  []
-  (do
-    (watch-actors)
-    ;(assoc @world :actors (living-actors (:actors @world)))
-    ))
+  [world]
+  ;(watch-actors)
+  ;(assoc @world :actors (living-actors (:actors @world)))
+  (dosync 
+    (let [alter-actors (filter #(alive? @%) (:actors @world))]
+      (alter world assoc :actors alter-actors))))
 
 (defn live-world
   "Sets the actors in motion."

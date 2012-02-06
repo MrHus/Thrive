@@ -1,5 +1,6 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world live-world cleanup-dead)])
+   (:use [thrive.actor :only (alive?)])
   (:import (java.io BufferedReader FileReader))
   
   (:require [thrive.human :only (Human)])
@@ -24,7 +25,7 @@
 (def cell-size 50)
 (def cell-half-size (/ cell-size 2))
 (def cell-0-8-size (* cell-size 0.8))
-(def use-sprites? true)
+(def use-sprites? false)
 (if use-sprites?
   (def tile-sprite (javax.imageio.ImageIO/read (clojure.java.io/resource "img/tiles.big.png"))))
 
@@ -161,7 +162,7 @@
   [& args]
   (do
     (live-world)
-    (cleanup-dead)
+    ;(cleanup-dead)
     (app :exit)))
 
 (if (= (System/getProperty "os.name") "Windows 7") (-main))
