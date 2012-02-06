@@ -59,33 +59,25 @@
   [^Human p, world-size]
   (if (empty? (:movement p))
     (if (>= (:food p) max-food-in-backpack)
-      (do 
-        (println "Lots of food -> back to city")
-        (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size)))
+      (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size))
       (let [closed-food-cell (closed-cell-with-food  [(:x p) (:y p)]  (:world p))]
-        (println closed-food-cell)
         (if (empty? closed-food-cell)
           (let [action :scout
                 closed-unknow-cell (closed-unknown-cells [(:x p) (:y p)] (:world p))]
-            (println closed-unknow-cell)
             (let
               [scout-route (get-plan (:planner p) (:x p) (:y p) (:x closed-unknow-cell) (:y closed-unknow-cell) movement traversable (:world p) world-size)]
-              (println "no food time to scout " closed-unknow-cell)
               (assoc p :action action :movement scout-route)))
           (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closed-food-cell) (:y closed-food-cell) movement traversable (:world p) world-size)]
-            (println "food path " food-path) 
             (assoc p :action :scavenge-food :movement food-path)
-            ))))    
-    (do 
-      (println "return p " p)
-      p)))
+            ))))
+    p))
 
 (defn walk  
   [^Human p world-size]
   (let [step (first (:movement p))]
     (if (is-move-valid? p step (:world p) world-size)
       (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
-      (assoc p :movement []) world-size)))
+      (assoc p :movement []))))
 
 (defn is-alive?
   [^Human p]
