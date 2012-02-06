@@ -25,7 +25,7 @@
 (def cell-size 50)
 (def cell-half-size (/ cell-size 2))
 (def cell-0-8-size (* cell-size 0.8))
-(def use-sprites? false)
+(def use-sprites? true)
 (if use-sprites?
   (def tile-sprite (javax.imageio.ImageIO/read (clojure.java.io/resource "img/tiles.big.png"))))
 

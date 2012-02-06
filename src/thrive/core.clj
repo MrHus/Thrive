@@ -149,35 +149,43 @@
     ]
 }))
 
+(defn cleanup-dead
+  "Removes dead actors in the world."
+  []
+  ;(watch-actors)
+  ;(assoc @world :actors (living-actors (:actors @world)))
+  (do
+    (println "CLEANUP-DEAD in capitials to find it")
+  (dosync 
+    (let [alter-actors (filter #(alive? @%) (:actors @world))]
+      (alter world assoc :actors alter-actors)))))
+
 (defn watch-actors
   "Teh world subscribes to changes of it's actors."
   []
-  (dotimes [i (count (:actors @world))]
-    (add-watch
-     ((:actors @world) i)
-     :alive
-     (fn [k r o n]
-       (do
-         ;(println "key => "  k)
-         ;(println "reference => "  r)
-         ;(println "old => " o)
-         ;(println "new => " n)
-         (if (false? (alive? n))
-           (do
-             (println "Dead")
-             (remove r (:actors @world)))))))))
-
-(defn cleanup-dead
-  "Removes dead actors in the world."
-  [world]
-  ;(watch-actors)
-  ;(assoc @world :actors (living-actors (:actors @world)))
-  (dosync 
-    (let [alter-actors (filter #(alive? @%) (:actors @world))]
-      (alter world assoc :actors alter-actors))))
+  (doseq [actor (:actors @world)]
+    (add-watch actor nil (fn [k r o n] cleanup-dead))))
+ 
+    
+;  (dotimes [i (count (:actors @world))]
+ ;   (add-watch
+ ;;    ((:actors @world) i)
+ ;    :alive
+ ;    (fn [k r o n]
+ ;      (do
+ ;        ;(println "key => "  k)
+ ;        ;(println "reference => "  r)
+ ;        ;(println "old => " o)
+ ;        ;(println "new => " n)
+ ;        (if (false? (alive? n))
+ ;          (do
+ ;            (println "Dead")
+ ;            (remove r (:actors @world)))))))))
 
 (defn live-world
   "Sets the actors in motion."
   []  
-  (doseq [actor (:actors @world)]
-    (send-off actor loop-actor world world-size)))
+  (do
+    (doseq [actor (:actors @world)]
+      (send-off actor loop-actor world world-size))
+    (watch-actors)))
