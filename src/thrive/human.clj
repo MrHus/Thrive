@@ -36,6 +36,7 @@
       (not= false (traversable (:tile dest))))))
 
 (defn find-destination
+  "Obtains a new destination for the human."
   [^Human p, world]
   (if (= [(:x p) (:y p)] (:city p))
     (if (= (:action p) :scout)
@@ -52,10 +53,7 @@
     (assoc p :world p-world)))
 
 (defn ^Human think
-  "A human decides a course of action based on his current state.
-   Still needs to have/obtain a destination (currently set for the city).
-   Then walk function needs to be updated so that Human moves to the first
-   location stored in the movement/detail-plan/walk-path vector"
+  "A human decides a course of action based on his current state."
   [^Human p, world-size]
   (if (empty? (:movement p))
     (if (>= (:food p) max-food-in-backpack)
@@ -72,21 +70,32 @@
             ))))
     p))
 
-(defn walk  
+(defn act
+  "A human acts after thinking up an action like move or wait."
   [^Human p world-size]
   (let [step (first (:movement p))]
     (if (is-move-valid? p step (:world p) world-size)
       (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
       (assoc p :movement []))))
 
+(defn digest
+  "A human eats food from it's own stock if it is not in the city."
+  [^Human p]
+  (let [city-x ((:city p) 0)
+        city-y ((:city p) 1)]
+    (if (not= [(:x p) (:y p)] [city-x city-y])
+      (assoc p :food (- (:food p) 1))
+      p)))
+
 (defn is-alive?
+  "Condition of a human to stay alive."
   [^Human p]
   (> (:food p) 0))
 
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
   [^Human p, actual-world world-size]
-  (time (walk (think (observe p actual-world world-size) world-size) world-size)))
+  (digest (act (think (observe p actual-world world-size) world-size) world-size)))
 
 (extend-type Human
   Actor
