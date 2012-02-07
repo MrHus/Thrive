@@ -14,7 +14,7 @@
    ])
 
 (def movement [[0, 0], [0, -1] [0, 1] [-1, 0] [1, 0]])
-(def traversable {:grass 1, :forest 1, :mountain 1, :desert 1 :sea 1, :unknown 1, :lava 1})
+(def traversable {:grass 1, :forest 1, :mountain-1 1, :mountain-2 1, :mountain-3 1, :desert 1 :sea 1, :unknown 1, :lava 1})
 (def worth-food-loot 50)
 
 (defn ^Seagull live-seagul

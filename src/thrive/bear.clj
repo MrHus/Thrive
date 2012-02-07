@@ -13,7 +13,7 @@
 ])
 
 (def movement [[-1, 0], [1, 0], [0, -1], [0, 1]])
-(def traversable {:grass false :forest 1 :mountain false :desert false :sea false :unknown 1 :lava false})
+(def traversable {:grass false :forest 1 :mountain-1 false :mountain-2 false :mountain-3 false :desert false :sea false :unknown 1 :lava false})
 
 (defn ^Bear live-bear
   "A bear moves to a random place, in the woods, to eat people."

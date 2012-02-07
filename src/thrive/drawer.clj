@@ -41,7 +41,9 @@
    :forest   {:color (color "darkgreen") :sprite [(* 36 4) 0 36 36]},
    :grass    {:color (color "green")     :sprite [(* 36 0) 0 36 36]},
    :lava     {:color (color "red")       :sprite [(* 36 2) 0 36 36]},
-   :mountain {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
+   :mountain-1 {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
+   :mountain-2 {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
+   :mountain-3 {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
    :desert   {:color (color "yellow")    :sprite [(* 36 1) 0 36 36]},
    :unknown  {:color (color "black")}
    })
