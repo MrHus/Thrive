@@ -1,25 +1,3 @@
-(ns thrive.core
-  (:use [thrive.actor :only (loop-actor, living-actors, alive?)])
-  (:require [thrive.human :only (Human)])
-  (:import (thrive.human Human))
-  (:require [thrive.city :only (City)])
-  (:import (thrive.city City))
-  (:use [thrive.cell :only (generate-unknown-world)])
-  (:require [thrive.cell :only (Cell)])
-  (:import (thrive.cell Cell))
-  
-  (:require [thrive.seagull :only (Seagull)])
-  (:import (thrive.seagull Seagull))
-
-  (:require [thrive.bear :only (Bear)])
-  (:import (thrive.bear Bear))
-  
-  (:use [overtone.at-at])
-  
-  (:gen-class))
-
-;;;;;;; References ;;;;;;;
-
 (def world-size 10)
 
 (def unknown-world (generate-unknown-world world-size))
@@ -140,29 +118,13 @@
     :cells  test-world
     :actors [
       (agent (City. 9 1 0 50 unknown-world)) 
-      ;(agent (Human. 9 0 0 50 unknown-world [9 1] :scout [] :a*))
-      ;(agent (Human. 3 3 0 50 unknown-world [9 1] :scout [] :mdp))
-      (agent (Human. 6 4 0 50 test-world    [9 1]    :scout [] :a*))
-      ;(agent (Human. 8 8 0 5 unknown-world  [9 1]  :scout [] :a*))
+      (agent (Human. 9 0 0 50 unknown-world [9 1] :city [] :a*))
+      (agent (Human. 3 3 0 0 unknown-world [9 1] :scout [] :mdp))
+      (agent (Human. 0 8 0 155 test-world [9 1] :city [] :a*))
+      (agent (Human. 8 8 0 5 unknown-world [9 1] :city [] :a*))
       (agent (Seagull. 0 0 0 true))
       (agent (Seagull. 5 5 0 true))
       (agent (Seagull. 0 9 0 true))
       (agent (Bear. 8 8 0))
     ]
 }))
-
-;;(load "examples/example1")
-
-(defn cleanup-dead
-  "Removes dead actors in the world."
-  []  
-  (dosync 
-    (alter world assoc :actors (filter #(alive? @%) (:actors @world)))))
-
-(defn live-world
-  "Sets the actors in motion."
-  []  
-  (do
-    (every 1000 cleanup-dead) ;; Clean the actors up every second. 
-    (doseq [actor (:actors @world)]
-      (send-off actor loop-actor world world-size))))
