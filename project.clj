@@ -4,4 +4,4 @@
   :dependencies [
                   [org.clojure/clojure "1.3.0"]
                   [seesaw "1.2.1"]
-                ])
+                  [overtone/at-at "0.2.1"]])
