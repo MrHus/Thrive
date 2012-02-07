@@ -3,7 +3,7 @@
 (extend-type Human
   Paintable
   (paint [this g]
-    (paint-half-block g (:x this) (:y this) "pink")))
+    (paint-half-block g (:x this) (:y this) "pink" [(* 9 36) 0 36 36])))
 
 ;; Will be an atom that points to an agent. Aka a ref to a ref!
 (def selected-human (atom nil))
@@ -19,7 +19,7 @@
     (paint-cells c g (:world human))
     (paint-half-block g (:x human) (:y human) "pink")
     (paint-plan-human g human)
-    (paint-0-8-block g (first (:city human)) (last (:city human)) "purple")))
+    (paint-0-8-block g (first (:city human)) (last (:city human)) "purple" [(* 9 36) 0 36 36])))
   
 (defn show-human-detail
   []

@@ -116,7 +116,7 @@
             ;plan route to random unknown cell - :scout
             (let [action :scout
                   closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))
-                  scout-route (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size)]
+                  scout-route (butlast (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size))]
               (assoc p :action action :movement scout-route))
             ;plan route to nearest food stash - :scavenge-food
             (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]

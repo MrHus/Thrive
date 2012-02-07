@@ -48,19 +48,28 @@
    :unknown  {:color (color "black")}
    })
 
+
+(defn get-tile 
+  [tile-sprite [x y width height]]
+  (.getSubimage tile-sprite x y width height))
+
 (defn paint-half-block
   "Paint a half block based on the x and y coordinates"
-  [g x y block-color]
-  (do
-    (.setColor g (color block-color))
-    (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
+  [g x y block-color image-location]
+  (if use-sprites?
+    (.drawImage g (get-tile tile-sprite image-location) (-(* cell-size x)  3) (- (* cell-size y) 3) (+ 6 cell-size) (+ 6 cell-size) nil)
+    (do
+      (.setColor g (color block-color))
+      (.fillRect g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size))))
 
 (defn paint-0-8-block
   "Paint a 0.8 block based on the x and y coordinates"
-  [g x y block-color]
-  (do
-    (.setColor g (color block-color))
-    (.fillRect g (+ (* cell-size x) (/ (- cell-size cell-0-8-size) 2)) (+ (* cell-size y) (/ (- cell-size cell-0-8-size) 2)) cell-0-8-size cell-0-8-size)))
+  [g x y block-color image-location]
+  (if use-sprites?
+    (.drawImage g (get-tile tile-sprite image-location) (-(* cell-size x)  3) (- (* cell-size y) 3) (+ 6 cell-size) (+ 6 cell-size) nil)
+    (do
+      (.setColor g (color block-color))
+      (.fillRect g (+ (* cell-size x) (/ (- cell-size cell-0-8-size) 2)) (+ (* cell-size y) (/ (- cell-size cell-0-8-size) 2)) cell-0-8-size cell-0-8-size))))
 
 (defn paint-half-circle
   "Paint a half circle based on the x and y coordinates"
@@ -68,11 +77,6 @@
   (do
     (.setColor g (color circle-color))
     (.fillOval g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
-
-(defn get-tile 
-  [tile-sprite [x y width height]]
-  (.getSubimage tile-sprite x y width height))
-  
 
 (defn paint-cells
   "Paint cells"
@@ -89,7 +93,7 @@
         (.setColor g (color "black"))
         (.drawString g (str (:z cell)) (+ cell-half-size (* cell-size (:x cell))) (+ cell-half-size (* cell-size(:y cell))))))
     (if (not (zero? (:food cell)))
-       (paint-half-block g (:x cell) (:y cell) "orange"))))
+       (paint-half-block g (:x cell) (:y cell) "orange" [(* 36 11) 0 36 36]))))
 
 (defn paint-world 
   "Paints the world.
@@ -108,12 +112,12 @@
 (extend-type Seagull
   Paintable
   (paint [this g]
-    (paint-half-block g (:x this) (:y this) "white")))
+    (paint-half-block g (:x this) (:y this) "white" [(* 8 36) 0 36 36])))
 
 (extend-type Bear
   Paintable
   (paint [this g]
-         (paint-half-block g (:x this) (:y this) "saddlebrown")))
+         (paint-half-block g (:x this) (:y this) "saddlebrown" [(* 7 36) 0 36 36])))
 
 (defn make-ui
   [on-close]
