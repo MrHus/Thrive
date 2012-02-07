@@ -73,11 +73,13 @@
 
 (defn paint-half-circle
   "Paint a half circle based on the x and y coordinates"
-  [g x y circle-color]
-  (do
-    (.setColor g (color circle-color))
-    (.fillOval g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size)))
-  
+  [g x y circle-color image-location]
+  (if use-sprites?
+    (.drawImage g (get-tile tile-sprite image-location) (-(* cell-size x)  3) (- (* cell-size y) 3) (+ 6 cell-size) (+ 6 cell-size) nil)
+    (do
+      (.setColor g (color circle-color))
+      (.fillOval g (+ (* cell-size x) (/ cell-half-size 2)) (+ (* cell-size y) (/ cell-half-size 2)) cell-half-size cell-half-size))))
+
 (defn paint-cells
   "Paint cells"
   [c g cells]

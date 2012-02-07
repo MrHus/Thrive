@@ -11,15 +11,15 @@
 (defn paint-plan-human
   [g ^Human h]
   (doseq [[x y] (:movement h)]
-   (paint-half-circle g x y "cyan")))
+   (paint-half-circle g x y "cyan" [(* 12 36) 0 36 36])))
 
 (defn paint-selected-human
   [c g]
   (let [human @@selected-human]
     (paint-cells c g (:world human))
-    (paint-half-block g (:x human) (:y human) "pink")
+    (paint-half-block g (:x human) (:y human) "pink" [(* 9 36) 0 36 36])
     (paint-plan-human g human)
-    (paint-0-8-block g (first (:city human)) (last (:city human)) "purple" [(* 9 36) 0 36 36])))
+    (paint-0-8-block g (first (:city human)) (last (:city human)) "purple" [(* 10 36) 0 36 36])))
   
 (defn show-human-detail
   []
