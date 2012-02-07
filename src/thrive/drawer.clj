@@ -1,6 +1,6 @@
 (ns thrive.drawer
   (:use [thrive.core :only (world live-world cleanup-dead)])
-   (:use [thrive.actor :only (alive?)])
+  (:use [thrive.actor :only (alive?)])
   (:import (java.io BufferedReader FileReader))
   
   (:require [thrive.human :only (Human)])
@@ -37,15 +37,15 @@
 ;{:key [x y width height]}
 (def tiles 
   {
-   :sea      {:color (color "blue")      :sprite [(* 36 3) 0 36 36]}
-   :forest   {:color (color "darkgreen") :sprite [(* 36 4) 0 36 36]},
-   :grass    {:color (color "green")     :sprite [(* 36 0) 0 36 36]},
-   :lava     {:color (color "red")       :sprite [(* 36 2) 0 36 36]},
+   :sea        {:color (color "blue")      :sprite [(* 36 3) 0 36 36]}
+   :forest     {:color (color "darkgreen") :sprite [(* 36 4) 0 36 36]},
+   :grass      {:color (color "green")     :sprite [(* 36 0) 0 36 36]},
+   :lava       {:color (color "red")       :sprite [(* 36 2) 0 36 36]},
    :mountain-1 {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
    :mountain-2 {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
    :mountain-3 {:color (color "gray")      :sprite [(* 36 6) 0 36 36]},
-   :desert   {:color (color "yellow")    :sprite [(* 36 1) 0 36 36]},
-   :unknown  {:color (color "black")}
+   :desert     {:color (color "yellow")    :sprite [(* 36 1) 0 36 36]},
+   :unknown    {:color (color "black")}
    })
 
 (defn paint-half-block
@@ -73,7 +73,6 @@
   [tile-sprite [x y width height]]
   (.getSubimage tile-sprite x y width height))
   
-
 (defn paint-cells
   "Paint cells"
   [c g cells]
@@ -164,7 +163,6 @@
   [& args]
   (do
     (live-world)
-    ;(cleanup-dead)
     (app :exit)))
 
 (if (= (System/getProperty "os.name") "Windows 7") (-main))
