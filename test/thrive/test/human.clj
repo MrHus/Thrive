@@ -1,5 +1,6 @@
 (ns thrive.test.human
   (:use [thrive.human])
+  (:import (thrive.human Human))
   (:use [thrive.cell])
   (:import (thrive.cell Cell))
   (:use [clojure.test]))
@@ -21,4 +22,16 @@
   (is (= true  (is-move-valid? 0 1 0 0 2 test-world world-size)))
   (is (= true  (is-move-valid? 1 0 0 1 1 test-world world-size)))
   (is (= true  (is-move-valid? 1 1 2 1 2 test-world world-size))))
-  
+
+(def human1 (Human. 0 1 0 5  test-world [0 2] :scout [{:x 0 :y 0}, {:x 1 :y 0}] :a*))
+(def human2 (Human. 0 2 0 5  test-world [0 2] :scout [{:x 0 :y 1}] :a*))
+
+(deftest digest-test
+  (is (= 4 (:food (digest human1))))
+  (is (= 5 (:food (digest human2)))))
+
+(deftest move-test
+  "These throw unsupported nth operation."
+  ;(is (= false (move human1 world-size)))
+  ;(is (= true (move human2 world-size)))
+  )

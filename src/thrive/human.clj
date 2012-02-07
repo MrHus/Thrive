@@ -44,6 +44,23 @@
       (first (cells-with-food world)))
     {:x ((:city p) 0) :y ((:city p) 1)}))
 
+(defn digest
+  "A human eats food from it's own stock if it is not in the city."
+  [^Human p]
+  (let [city-x ((:city p) 0)
+        city-y ((:city p) 1)]
+    (if (not= [(:x p) (:y p)] [city-x city-y])
+      (assoc p :food (dec (:food p)))
+      p)))
+
+(defn move
+  "Allows humans to move to a new cell."
+  [^Human p, world-size]
+  (let [step (first (:movement p))]
+    (if (is-move-valid? p step (:world p) world-size)
+      (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
+      (assoc p :movement []))))
+
 (defn observe
   "A human can observe left, right up, and down. This function alters
    the world as the person sees it with the actual cells from the world."
@@ -72,20 +89,20 @@
 
 (defn act
   "A human acts after thinking up an action like move or wait."
-  [^Human p world-size]
-  (let [step (first (:movement p))]
-    (if (is-move-valid? p step (:world p) world-size)
-      (assoc p :x (step 0) :y (step 1) :movement (rest (:movement p)))
-      (assoc p :movement []))))
-
-(defn digest
-  "A human eats food from it's own stock if it is not in the city."
-  [^Human p]
-  (let [city-x ((:city p) 0)
-        city-y ((:city p) 1)]
-    (if (not= [(:x p) (:y p)] [city-x city-y])
-      (assoc p :food (- (:food p) 1))
-      p)))
+  [^Human p, world-size]
+  (let [current-cell (find-cell (:x p) (:y p) (:world p) world-size)
+        cell-type (:tile current-cell)
+        move-cost (cell-type traversable)]
+    (if (> move-cost 1)
+      (loop [h p, i (dec move-cost)]
+        (if (zero? (:food h))
+          h
+          (if (zero? i)
+            (move h world-size)
+            (do
+              (. Thread sleep (interval h))
+              (recur (digest h) (dec i))))))
+      (move p world-size))))
 
 (defn is-alive?
   "Condition of a human to stay alive."
