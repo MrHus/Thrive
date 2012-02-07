@@ -79,50 +79,94 @@
         city (filter #(and (instance? City @%) (= (hometown 0) (:x @%)) (= (hometown 1) (:y @%))) (:actors world))]
     city))
 
-(defn wewewe
-  "(let [current-cell (find-cell (:x p) (:y p) (:world p) world-size)]
-    (if (= [(:x p) (:y p)] (:city p)))
-    (if (> (:food current-cell) 0)))")
+(defn in-hometown?
+  [^Human p]
+  (= [(:x p) (:y p)] (:city p)))
 
+(defn backpack-is-full?
+  [^Human p]
+  (>= (:food p) max-food-in-backpack))
+
+(defn scout-plan
+  "Plan to the unknown or just a random place if everything is known."
+  [^Human p world-size]
+  (let [closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))]
+    (if (empty? closest-unknown-cell)
+      (get-plan (:planner p) (:x p) (:y p) (int (rand world-size)) (int (rand world-size)) movement traversable (:world p) world-size))  
+      (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size)))  
+
+(defn ^Human plan-to-closest-food-or-scout
+  "Try to plan to the closest food resource. If no food is found just scout."
+  [^Human p world-size]
+  (let [closest-food-cell (closest-cell-with-food [(:x p) (:y p)] (:world p))]
+    (if (empty? closest-food-cell)
+      ;plan route to random unknown cell :scout
+      (let [action :scout
+            scout-route (scout-plan p world-size)]
+        (println "Plan " "x " (:x p) " y " (:y p) " route " scout-route) 
+        (assoc p :action action :movement scout-route))
+      ;plan route to nearest food stash - :scavenge-food
+      (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]
+        (assoc p :action :scavenge-food :movement food-path)))))
+  
+(defn ^Human back-pack-full-thought
+  "This thought describes what the human thinks when his backpack is full"
+  [^Human p ref-world world-size]
+  (if (in-hometown? p)
+    ;Drop food in city
+    (let [amount (- (:food p) max-food-in-backpack)
+          city (get-city p @ref-world)]    
+      ;(send-off city deliver-food @city amount)
+      (plan-to-closest-food-or-scout (assoc p :food (- (:food p) amount))))
+    ;plan route to city to drop of food
+    (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size))))
+  
+(defn grabbed-food-from-cell
+  "How many food did the human grab from a cell.
+   Grab all if backpack is empty grab limited amount when half full"
+  [^Human p cell]
+  (let [roomleft (- max-food-in-backpack (:food p))]
+    (if (>= (:food cell) roomleft) 
+      roomleft 
+      (- roomleft (:food cell)))))
+  
+(defn ^Human back-pack-halffull-thought
+  "This thought describes what the human thinks when the backpack is half full."  
+  [^Human p current-cell ref-world world-size]
+  ;; My backpack is not filled with food. 
+  (if (> (:food current-cell) 0)
+    ;Pickup food then plan to city
+    (let [grabbed-food (grabbed-food-from-cell p current-cell)]
+      (println "Grabbed food " grabbed-food " from world ") 
+      ;; Alter the cells food value since I'm going to pick it up. 
+      ;(let [cells  (:cells @ref-world)
+            ;loc    (find-cell-loc (:x p) (:y p) world-size)
+            ;cell   (find-cell (:x p) (:y p) @ref-world world-size)]
+        ;(println cells loc cell)    
+        ;(dosync 
+          ;(alter ref-world assoc :cells 
+            ;(assoc cells loc 
+              ;(assoc cell :food (- (:food current-cell) grabbed-food))))))
+      (assoc p 
+        :action :city 
+        :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size) 
+        :food (+ (:food p) grabbed-food)))
+    (plan-to-closest-food-or-scout p world-size)))
+    
 (defn ^Human think
   "A human decides a course of action based on his current state."
-  [^Human p, world, world-size]
+  [^Human p, ref-world, world-size]
+  ;; There is nothing to do (could be in city)
   (if (empty? (:movement p))
-    (if (> (:food p) max-food-in-backpack)
-      (if (= [(:x p) (:y p)] (:city p))
-        ;Drop food in city
-        (let [amount (- (:food p) max-food-in-backpack)
-              city (get-city p world)]
-          ;(send-off city deliver-food @city amount)
-          (assoc p :food 20))
-        ;plan route to city to drop of food
-        (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size)))
-      (let [current-cell (find-cell (:x p) (:y p) (:world p) world-size)]
-        (if (> (:food current-cell) 0)
-          ;Pickup food then plan to city
-          (let [grabbed-food (if (>= (:food current-cell) max-food-in-backpack)
-                                   max-food-in-backpack
-                                   (:food current-cell))]
-            (dosync
-              (let [cells(:cells world)
-                    item-number (find-cell-loc (:x current-cell) (:y current-cell) world-size)
-                    alter-cells (assoc-in cells [item-number] (assoc current-cell :food (- (:food current-cell) grabbed-food)))]
-                (alter world assoc :cells alter-cells)))
-            (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size) :food (+ (:food p) grabbed-food)))
-          ;no food then continue
-          p)
-        (let [closest-food-cell (closest-cell-with-food  [(:x p) (:y p)]  (:world p))]
-          (if (empty? closest-food-cell)
-            ;plan route to random unknown cell - :scout
-            (let [action :scout
-                  closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))
-                  scout-route (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size)]
-              (assoc p :action action :movement scout-route))
-            ;plan route to nearest food stash - :scavenge-food
-            (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]
-              (assoc p :action :scavenge-food :movement food-path))))))
+    (if (backpack-is-full? p)
+      (do 
+        (println "full back pack")
+        (back-pack-full-thought p ref-world world-size))
+      (do 
+        (println "not full back pack")
+        (back-pack-halffull-thought p (find-cell (:x p) (:y p) (:world p) world-size) ref-world world-size)))
     p))
-
+    
 (defn act
   "A human acts after thinking up an action like move or wait."
   [^Human p, world-size]
@@ -130,7 +174,7 @@
         cell-type (:tile current-cell)
         move-cost (cell-type traversable)]
     (if (> move-cost 1)
-      (loop [h p, i (dec move-cost)]
+      (loop [h p i (dec move-cost)]
         (if (zero? (:food h))
           h
           (if (zero? i)
@@ -147,11 +191,11 @@
 
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
-  [^Human p, actual-world world-size]
-  (digest (act (think (observe p actual-world world-size) actual-world world-size) world-size)))
+  [^Human p, ref-world world-size]
+  (time (digest (act (think (observe p @ref-world world-size) ref-world world-size) world-size))))
 
 (extend-type Human
   Actor
-  (live [this world world-size] (live-human this @world world-size))
+  (live [this world world-size] (live-human this world world-size))
   (interval [this] 1000)
   (alive? [this] (is-alive? this)))

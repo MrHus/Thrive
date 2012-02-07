@@ -42,8 +42,7 @@
   (:cell (first (sort-by :steps (map (fn [cell] 
                                  {:steps (+ (Math/abs ^Integer (- (:x cell) x)) 
                                             (Math/abs ^Integer (- (:y cell) y))) :cell cell}) 
-                               cells)
-                  ))))
+                               cells)))))
 
 (defn closest-unknown-cells
   "Return the closest unknown cells of the given world"

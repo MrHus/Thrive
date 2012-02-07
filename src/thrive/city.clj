@@ -19,8 +19,9 @@
 
 (defn deliver-food
   [^City c, amount]
-  (println "Got food")
-  (assoc c :food (+ (:food c) amount)))
+  (do
+    (println "Got food")
+    (assoc c :food (+ (:food c) amount))))
 
 (defn ^City live-city
   "A human first observers his surroundings than makes a move."
