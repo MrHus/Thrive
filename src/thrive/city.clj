@@ -17,6 +17,11 @@
         new-food (if (< food 0) 0 food)]
    (assoc c :food new-food)))
 
+(defn deliver-food
+  [^City c, amount]
+  (println "Got food")
+  (assoc c :food (+ (:food c) amount)))
+
 (defn ^City live-city
   "A human first observers his surroundings than makes a move."
   [^City c, actual-world] 
