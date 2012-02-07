@@ -78,10 +78,9 @@
       (let [closest-food-cell (closest-cell-with-food  [(:x p) (:y p)]  (:world p))]
         (if (empty? closest-food-cell)
           (let [action :scout
-                closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))]
-            (let
-              [scout-route (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size)]
-              (assoc p :action action :movement scout-route)))
+                closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))
+                scout-route (get-plan (:planner p) (:x p) (:y p) (:x closest-unknown-cell) (:y closest-unknown-cell) movement traversable (:world p) world-size)]
+            (assoc p :action action :movement scout-route))
           (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]
             (assoc p :action :scavenge-food :movement food-path)
             ))))
