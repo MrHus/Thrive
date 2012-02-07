@@ -1,22 +1,3 @@
-(ns thrive.examples
-  (:use [thrive.actor :only (loop-actor, living-actors, alive?)])
-  (:require [thrive.human :only (Human)])
-  (:import (thrive.human Human))
-  (:require [thrive.city :only (City)])
-  (:import (thrive.city City))
-  (:use [thrive.cell :only (generate-unknown-world)])
-  (:require [thrive.cell :only (Cell)])
-  (:import (thrive.cell Cell))
-  
-  (:require [thrive.seagull :only (Seagull)])
-  (:import (thrive.seagull Seagull))
-
-  (:require [thrive.bear :only (Bear)])
-  (:import (thrive.bear Bear))
-  
-  (:use [overtone.at-at])
-  
-  (:gen-class))
 (def world-size 10)
 
 (def unknown-world (generate-unknown-world world-size))
