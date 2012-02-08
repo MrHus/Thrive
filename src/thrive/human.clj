@@ -21,7 +21,7 @@
 
 (def max-food-in-backpack 50)
 (def movement [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]])
-(def traversable {:grass 1, :forest 2, :mountain-1 2, :mountain-2 3, :mountain-3 4, :desert 2 :sea 5, :unknown 25, :lava false})
+(def traversable {:grass 1, :forest 2, :mountain-1 2, :mountain-2 3, :mountain-3 4, :desert 2 :sea 5, :unknown 25, :lava false, :not-reachable false})
 (def actions [:scavenge-food, :scout, :hungry-scout, :hungry, :city])
 (def observe-mask [[0 0] [-1 0] [1 0] [0 -1] [0 1]]);; What is visible by the Person, format is [x, y]
 
@@ -87,6 +87,14 @@
   [^Human p]
   (>= (:food p) max-food-in-backpack))
 
+(defn set-unreachable
+  [^Human p x y world-size]
+  (let [cell-location (find-cell-loc x y world-size)
+        old-cell ((:world p) cell-location)
+        new-cell (assoc old-cell :tile :not-reachable :time (System/currentTimeMillis))]
+    (println old-cell " : " new-cell)
+    (assoc p :world (assoc-in (:world p) [cell-location] new-cell))))
+
 (defn scout-plan
   "Plan to the unknown or just a random place if everything is known."
   [^Human p world-size]
@@ -103,12 +111,19 @@
       ;plan route to random unknown cell :scout
       (let [action :scout
             scout-route (scout-plan p world-size)]
-        (println "Plan " "x " (:x p) " y " (:y p) " route " scout-route) 
-        (assoc p :action action :movement scout-route))
+        (println "Plan " "x " (:x p) " y " (:y p) " route " scout-route " zero? " (zero? (count scout-route)))
+        (if (zero? (count scout-route))
+          (let [closest-unknown-cell (closest-unknown-cells [(:x p) (:y p)] (:world p))
+                new-human (assoc (set-unreachable p (:x closest-unknown-cell) (:y closest-unknown-cell) world-size) :action action :movement scout-route)]
+            (println new-human)
+            (println (closest-unknown-cells [(:x p) (:y p)] (:world p)))
+            (println (closest-unknown-cells [(:x new-human) (:y new-human)] (:world new-human)))
+            new-human)
+            (assoc p :action action :movement scout-route)))
       ;plan route to nearest food stash - :scavenge-food
       (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]
         (assoc p :action :scavenge-food :movement food-path)))))
-  
+
 (defn ^Human back-pack-full-thought
   "This thought describes what the human thinks when his backpack is full"
   [^Human p ref-world world-size]
