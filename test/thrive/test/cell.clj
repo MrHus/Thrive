@@ -73,4 +73,14 @@
   
   (is (= unknown-world-size-three (generate-unknown-world 3)))
   (is (= unknown-world-size-two   (generate-unknown-world 2))))
-   
+  
+(def cell-time-10 (assoc (Cell. 0 2 0 :grass 0) :time 10)) 
+(def cell-time-no (Cell. 0 2 0 :grass 0)) 
+  
+(deftest get-time-test
+  (is (= 10 (get-time cell-time-10)))
+  (is (= 0  (get-time cell-time-no))))
+
+(deftest get-cell-with-most-time-test
+  (is (= cell-time-10 (get-cell-with-most-time cell-time-no cell-time-10)))
+  (is (= cell-time-10 (get-cell-with-most-time cell-time-10 cell-time-no))))
