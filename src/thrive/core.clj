@@ -20,11 +20,10 @@
 
 ;;;;;;; References ;;;;;;;
 
-(def world-size 10)
-
-(def unknown-world (generate-unknown-world world-size))   
-
+;(load "examples/d-double-world-pathfinding-seen-example")
+;(load "examples/d-double-world-pathfinding-blind-example")
 ;(load "examples/d-world-with-bears")
+;(load "examples/d-world-with-seagull")
 (load "examples/example1")
 ;(load "examples/c-unknown-lava-world")
 ;(load "examples/c-medium-unknown-world")

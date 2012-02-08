@@ -104,12 +104,12 @@
  
    (Cell.  0,  9,  0,  :lava,  0)
    (Cell.  1,  9,  0,  :lava,  0)
-   (Cell.  2,  9,  0,  :lava,  150)
+   (Cell.  2,  9,  0,  :lava,  0)
    (Cell.  3,  9,  1,  :lava,  0)
    (Cell.  4,  9,  0,  :lava,  0)
    (Cell.  5,  9,  0,  :lava,  0)
    (Cell.  6,  9,  0,  :lava,  0)
-   (Cell.  7,  9,  0,  :lava,  150)
+   (Cell.  7,  9,  0,  :lava,  0)
    (Cell.  8,  9,  0,  :lava,  0)
    (Cell.  9,  9,  0,  :lava,  0)]))
 

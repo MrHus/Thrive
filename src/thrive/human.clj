@@ -2,7 +2,7 @@
   (:use thrive.actor)
   (:require [thrive.city :only (City)])
   (:import (thrive.city City))
-  (:use [thrive.cell :only (closest-cell-with-food, closest-unknown-cells, find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
+  (:use [thrive.cell :only (share-knowledge-between closest-cell-with-food, closest-unknown-cells, find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
   (:use [thrive.planner :only (get-plan)])
   (:gen-class))
 
@@ -97,7 +97,7 @@
         old-cell ((:world p) cell-location)
         new-cell (assoc old-cell :tile :not-reachable :time (System/currentTimeMillis))]
     (println old-cell " : " new-cell)
-    (assoc p :world (assoc-in (:world p) [cell-location] new-cell))))
+    (assoc p :world (assoc (:world p) cell-location new-cell))))
 
 (defn scout-plan
   "Plan to the unknown or just a random place if everything is known."
@@ -134,10 +134,10 @@
   (if (in-hometown? p)
     (do ;(println "in home town")
     ;Drop food in city
-    (let [city (get-city p ref-actors)]
-      ;(println "Food in city " (:food @city))
+    (let [city (get-city p ref-actors)
+          w (share-knowledge-between (:world @city) (:world p))]
       (send-off city deliver-food drop-food-in-city)
-      (plan-to-closest-food-or-scout (assoc p :food (- (:food p) drop-food-in-city)) world-size)))
+      (plan-to-closest-food-or-scout (assoc p :food (- (:food p) drop-food-in-city) :world w) world-size)))
     ;plan route to city to drop of food
     (assoc p :action :city :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size))))
   
@@ -210,7 +210,7 @@
 (defn ^Human live-human
   "A human observes his surroundings, thinks up a dicision and then acts accordingly."
   [^Human p, ref-actors, ref-world world-size]
-  (digest (act (think (observe p @ref-world world-size) ref-actors ref-world world-size) world-size)))
+  (time (digest (act (think (observe p @ref-world world-size) ref-actors ref-world world-size) world-size))))
 
 (extend-type Human
   Actor
