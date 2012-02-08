@@ -29,6 +29,6 @@
 
 (extend-type Bear
   Actor
-  (live [this world world-size] (live-bear this (:cells @world) world-size))
+  (live [this actors world world-size] (live-bear this @world world-size))
   (interval [this] 1000)
   (alive? [this] (is-alive? this)))

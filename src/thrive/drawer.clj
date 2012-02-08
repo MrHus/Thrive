@@ -1,5 +1,5 @@
 (ns thrive.drawer
-  (:use [thrive.core :only (world live-world cleanup-dead)])
+  (:use [thrive.core :only (world actors live-world cleanup-dead)])
   (:use [thrive.actor :only (alive?)])
   (:import (java.io BufferedReader FileReader))
   
@@ -96,8 +96,8 @@
    g = The graphics2D context"
   [c g]
   (do
-    (paint-cells c g (:cells @world))
-    (doseq [actor (:actors @world)]
+    (paint-cells c g @world)
+    (doseq [actor @actors]
       (paint @actor g))))
 
 ;; Load helper files
@@ -139,7 +139,7 @@
   [^MouseEvent e]
   (let [x (- (. e getX) 3)
         y (- (. e getY) 24)]
-    (doseq [actor (:actors @world)]
+    (doseq [actor @actors]
       (let [ax (+ (* cell-size (:x @actor)) (/ cell-half-size 2)) 
             ay (+ (* cell-size (:y @actor)) (/ cell-half-size 2))]
         (if (and (> x ax) (< x (+ ax cell-half-size)) (> y ay) (< y (+ ay cell-half-size)))

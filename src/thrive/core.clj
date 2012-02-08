@@ -1,5 +1,5 @@
 (ns thrive.core
-  (:use [thrive.actor :only (loop-actor, living-actors, alive?)])
+  (:use [thrive.actor :only (loop-actor, alive?)])
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
   (:require [thrive.city :only (City)])
@@ -24,7 +24,7 @@
 
 (def unknown-world (generate-unknown-world world-size))
 
-(def test-world
+(def world (ref
   [(Cell.  0,  0,  0,  :grass,  0)
    (Cell.  1,  0,  0,  :grass,  0)
    (Cell.  2,  0,  0,  :lava,   0)
@@ -133,34 +133,33 @@
    (Cell.  6,  9,  0,  :grass,  0)
    (Cell.  7,  9,  0,  :forest,  0)
    (Cell.  8,  9,  0,  :forest,  0)
-   (Cell.  9,  9,  0,  :forest,  0)])
+   (Cell.  9,  9,  0,  :forest,  0)
+]))
 
-(def world (ref 
-{
-    :cells  test-world
-    :actors [
-      (agent (City. 9 1 0 50 unknown-world)) 
-      ;(agent (Human. 9 0 0 50 unknown-world [9 1] :scout [] :a*))
-      ;(agent (Human. 3 3 0 50 unknown-world [9 1] :scout [] :mdp))
-      (agent (Human. 6 4 0 50 test-world    [9 1]    :scout [] :a*))
-      ;(agent (Human. 8 8 0 5 unknown-world  [9 1]  :scout [] :a*))
-      (agent (Seagull. 0 0 0 true))
-      (agent (Seagull. 5 5 0 true))
-      (agent (Seagull. 0 9 0 true))
-      (agent (Bear. 8 8 0))
-    ]
-}))
+(def actors (ref [
+  (agent (City. 9 1 0 50 unknown-world)) 
+  (agent (Human. 9 0 0 50 unknown-world [9 1] :scout [] :a*))
+  (agent (Human. 3 3 0 50 unknown-world [9 1] :scout [] :mdp))
+  (agent (Human. 6 4 0 50 @world    [9 1]    :scout [] :a*))
+  (agent (Human. 8 8 0 5 unknown-world  [9 1]  :scout [] :a*))
+  (agent (Seagull. 0 0 0 true))
+  (agent (Seagull. 5 5 0 true))
+  (agent (Seagull. 0 9 0 true))
+  (agent (Bear. 8 8 0))
+]))
 
 (defn cleanup-dead
   "Removes dead actors in the world."
   []  
-  (dosync 
-    (alter world assoc :actors (filter #(alive? @%) (:actors @world)))))
+  (do
+    ;(println "Start cleanup of dead actors")
+    (dosync 
+      (ref-set actors (filter #(alive? @%) @actors)))))
 
 (defn live-world
   "Sets the actors in motion."
   []  
   (do
     (every 1000 cleanup-dead) ;; Clean the actors up every second. 
-    (doseq [actor (:actors @world)]
-      (send-off actor loop-actor world world-size))))
+    (doseq [actor @actors]
+      (send-off actor loop-actor actors world world-size))))
