@@ -24,6 +24,7 @@
 
 (def unknown-world (generate-unknown-world world-size))   
 
+;(load "examples/d-world-with-bears")
 (load "examples/example1")
 
 (defn cleanup-dead
