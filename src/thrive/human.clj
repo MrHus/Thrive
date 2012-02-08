@@ -1,6 +1,6 @@
 (ns thrive.human
   (:use thrive.actor)
-  (:use [thrive.city :only (deliver-food)])
+  (:require [thrive.city :only (City)])
   (:import (thrive.city City))
   (:use [thrive.cell :only (closest-cell-with-food, closest-unknown-cells, find-cell-loc, find-cell, find-cells, cells-with-food, unknown-cells surrounding-cells-by-mask)])
   (:use [thrive.planner :only (get-plan)])
@@ -78,6 +78,10 @@
   (let [hometown (:city p)
         city (filter #(and (instance? City @%) (= (hometown 0) (:x @%)) (= (hometown 1) (:y @%))) @ref-actors)]
     (first city)))
+
+(defn deliver-food
+  [^City c, amount]
+  (assoc c :food (+ (:food c) amount)))
 
 (defn in-hometown?
   [^Human p]

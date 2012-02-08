@@ -8,7 +8,7 @@
   y     ;; The y position on the world
   z     ;; The z position on the world, is equal to height of the tile.
   tile  ;; The type of tile, in symbol form. IE :grass, :sea, :mountain
-  food  ;; The current food value of this cell
+  food  ;; The current food value of this cell 
 ])
 
 (defn find-cell-loc
@@ -87,3 +87,21 @@
   "Generates an unknown square world, the size is determined by the first argument"
   [size]
   (vec (map #(Cell. (mod % size) (int (/ % size)) 0 :unknown 0) (range (* size size)))))
+
+(defn get-time
+  "Gets the time from a cell, could be nil"
+  [^Cell c]
+  (if (nil? (:time c))
+    0
+    (:time c)))
+
+(defn get-cell-with-most-time
+  "Gets the cell with the most time"
+  [^Cell c1 ^Cell c2]
+  (if (> (get-time c1) (get-time c2))
+    c1
+    c2))
+
+(defn share-knowledge-between
+  [cellsA cellsB]
+  (map get-cell-with-most-time cellsA cellsB))
