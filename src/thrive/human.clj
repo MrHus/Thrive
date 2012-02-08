@@ -103,7 +103,7 @@
       ;plan route to random unknown cell :scout
       (let [action :scout
             scout-route (scout-plan p world-size)]
-        (println "Plan " "x " (:x p) " y " (:y p) " route " scout-route) 
+        ;(println "Plan " "x " (:x p) " y " (:y p) " route " scout-route) 
         (assoc p :action action :movement scout-route))
       ;plan route to nearest food stash - :scavenge-food
       (let [food-path (get-plan (:planner p) (:x p) (:y p) (:x closest-food-cell) (:y closest-food-cell) movement traversable (:world p) world-size)]
@@ -116,7 +116,7 @@
     (do (println "in home town")
     ;Drop food in city
     (let [city (get-city p ref-actors)]
-      (println "Food in city " (:food @city))
+      ;(println "Food in city " (:food @city))
       (send-off city deliver-food drop-food-in-city)
       (plan-to-closest-food-or-scout (assoc p :food (- (:food p) drop-food-in-city)) world-size)))
     ;plan route to city to drop of food
@@ -138,7 +138,7 @@
   (if (> (:food current-cell) 0)
     ;Pickup food then plan to city
     (let [grabbed-food (grabbed-food-from-cell p current-cell)]
-      (println "Grabbed food " grabbed-food " from world ") 
+      ;(println "Grabbed food " grabbed-food " from world ") 
       ;; Alter the cells food value since I'm going to pick it up. 
         (dosync
           (let [loc    (find-cell-loc (:x p) (:y p) world-size)

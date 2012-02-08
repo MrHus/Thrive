@@ -148,6 +148,7 @@
   (agent (Bear. 8 8 0))
 ]))
 
+
 ;;(load "examples/example1")
 
 (defn cleanup-dead
