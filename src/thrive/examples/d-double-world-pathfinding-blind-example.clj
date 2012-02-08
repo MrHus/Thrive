@@ -114,7 +114,6 @@
    (Cell.  9,  9,  0,  :lava,  0)]))
 
 (def actors (ref [
-    
       (agent (City. 2 0 0 50 unknown-world)) 
       (agent (City. 7 0 0 50 unknown-world)) 
       (agent (Human. 2 5 0 750 unknown-world [2 0] :scout [] :mdp))

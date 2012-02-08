@@ -116,6 +116,6 @@
 (def actors (ref [
       (agent (City. 2 0 0 50 unknown-world)) 
       (agent (City. 7 0 0 50 unknown-world)) 
-      (agent (Human. 2 5 0 50 test-world [2 0] :scout [] :mdp))
-      (agent (Human. 7 5 0 50 test-world [7 0] :scout [] :a*))
+      (agent (Human. 2 5 0 50 @world [2 0] :scout [] :mdp))
+      (agent (Human. 7 5 0 50 @world [7 0] :scout [] :a*))
     ]))
