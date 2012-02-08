@@ -1,10 +1,6 @@
 (ns thrive.city
   (:use thrive.actor)
-  (:use [thrive.cell :only (share-knowledge-between)])
-  
-  (:require [thrive.human :only (Human)])
-  (:import (thrive.human Human))
-   
+  (:use [thrive.cell :only (share-knowledge-between)])   
   (:gen-class))
 
 (defrecord City
@@ -27,7 +23,7 @@
 (defn ^City live-city
   "A city burns food"
   [^City c ref-actors] 
-  (let [city-dwellers (filter #(and (instance? Human @%) (= (:x c) (:x @%)) (= (:y c) (:y @%))) @ref-actors)]
+  (let [city-dwellers (filter #(and (not (nil? (:world @%))) (= (:x c) (:x @%)) (= (:y c) (:y @%))) @ref-actors)]
     (if (zero? (count city-dwellers))
       (decrease-food c 1)
       (assoc (decrease-food c 1) :world (share-knowledge-between (:world c) (reduce share-knowledge-between (map #(:world @%) city-dwellers)))))))
