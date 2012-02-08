@@ -20,7 +20,7 @@
 
 ;;;;;;; References ;;;;;;;
 
-(load "examples/example1")
+(load "examples/d-double-world-pathfinding-blind-example")
 
 (defn cleanup-dead
   "Removes dead actors in the world."
