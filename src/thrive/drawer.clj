@@ -1,5 +1,5 @@
 (ns thrive.drawer
-  (:use [thrive.core :only (world actors live-world cleanup-dead)])
+  (:use [thrive.core :only (world world-size actors live-world cleanup-dead)])
   (:use [thrive.actor :only (alive?)])
   (:import (java.io BufferedReader FileReader))
   
@@ -126,7 +126,7 @@
   [on-close]
   (frame 
     :title "Thrive" 
-    :width 515 :height 539
+    :width (+ (* world-size cell-size) 15) :height (+ (* world-size cell-size) 39)
     :on-close on-close
     :content 
     (border-panel
