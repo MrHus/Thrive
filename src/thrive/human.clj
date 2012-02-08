@@ -129,7 +129,7 @@
   (let [roomleft (- max-food-in-backpack (:food p))]
     (if (>= (:food cell) roomleft) 
       roomleft 
-      (- roomleft (:food cell)))))
+      (:food cell))))
   
 (defn ^Human backpack-not-enough-food-thought
   "This thought describes what the human thinks when the backpack is half full."  
@@ -143,9 +143,10 @@
         (dosync
           (let [loc    (find-cell-loc (:x p) (:y p) world-size)
                 cell   (find-cell (:x p) (:y p) @ref-world world-size)]
-          ;(println "Food in cell " (:food cell))  
+          (println "Food in cell " (:food cell))  
           (alter ref-world assoc loc 
-            (assoc cell :food (- (:food cell) grabbed-food)))))
+            (assoc cell :food (- (:food cell) grabbed-food)))
+            (println "Food in cell " (:food cell))))
       (assoc p 
         :action :city 
         :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size) 

@@ -30,6 +30,10 @@
   (is (= 4 (:food (digest human1))))
   (is (= 5 (:food (digest human2)))))
 
+(deftest grabbed-food-from-cell-test
+  (is (= 45 (grabbed-food-from-cell human1 {:food 50})))
+  (is (= 15 (grabbed-food-from-cell human1 {:food 15}))))
+
 (deftest move-test
   "These throw unsupported nth operation."
   ;(is (= false (move human1 world-size)))
