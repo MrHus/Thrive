@@ -113,7 +113,7 @@
   "This thought describes what the human thinks when his backpack is full"
   [^Human p ref-actors world-size]
   (if (in-hometown? p)
-    (do (println "in home town")
+    (do ;(println "in home town")
     ;Drop food in city
     (let [city (get-city p ref-actors)]
       ;(println "Food in city " (:food @city))
@@ -143,10 +143,9 @@
         (dosync
           (let [loc    (find-cell-loc (:x p) (:y p) world-size)
                 cell   (find-cell (:x p) (:y p) @ref-world world-size)]
-          (println "Food in cell " (:food cell))  
+          ;(println "Food in cell " (:food cell))  
           (alter ref-world assoc loc 
-            (assoc cell :food (- (:food cell) grabbed-food)))
-            (println "Food in cell " (:food cell))))
+            (assoc cell :food (- (:food cell) grabbed-food)))))
       (assoc p 
         :action :city 
         :movement (get-plan (:planner p) (:x p) (:y p) ((:city p) 0) ((:city p) 1) movement traversable (:world p) world-size) 

@@ -10,7 +10,6 @@
    x      ;; The x position on the world
    y      ;; The y position on the world
    z      ;; The z position on the world, is equal to height of the tile.
-   alive  ;; is Seagull alive
 ])
 
 (def movement [[0, 0], [0, -1] [0, 1] [-1, 0] [1, 0]])
@@ -29,8 +28,8 @@
                 cell   (find-cell (:x s) (:y s) @ref-world world-size)]
             (alter ref-world assoc loc 
                 (assoc cell :food (+ worth-food-loot (:food cell))))))
-        (assoc s :alive false))      
-      (assoc s :alive true))))        
+        (assoc s :x (int (rand world-size)) :y (int (rand world-size))))      
+     s)))        
 
 (defn ^Seagull move-seagull
   "Move the Seagull to a random location that surrounds it."
@@ -49,8 +48,11 @@
       alive-seagull)))
   
 (defn is-alive?
+  "Seagull's are immortal beings sent from the future to annoy.
+   But in al seriousness a seagull is reused when it 'dies' it 
+   gets a new location."
   [^Seagull s]
-  (:alive s))
+  true)
 
 (extend-type Seagull
   Actor
