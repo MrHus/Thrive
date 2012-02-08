@@ -2,7 +2,7 @@
 
 (def unknown-world (generate-unknown-world world-size))
 
-(def test-world
+(def world (ref
   [(Cell.  0,  0,  0,  :lava,  0)
    (Cell.  1,  0,  0,  :lava,  0)
    (Cell.  2,  0,  0,  :grass, 0)
@@ -111,15 +111,12 @@
    (Cell.  6,  9,  0,  :lava,  0)
    (Cell.  7,  9,  0,  :grass,  150)
    (Cell.  8,  9,  0,  :lava,  0)
-   (Cell.  9,  9,  0,  :lava,  0)])
+   (Cell.  9,  9,  0,  :lava,  0)]))
 
-(def world (ref 
-{
-    :cells  test-world
-    :actors [
+(def actors (ref [
+    
       (agent (City. 2 0 0 50 unknown-world)) 
       (agent (City. 7 0 0 50 unknown-world)) 
       (agent (Human. 2 5 0 50 unknown-world [2 0] :scout [] :mdp))
       (agent (Human. 7 5 0 50 unknown-world [7 0] :scout [] :a*))
-    ]
-}))
+    ]))

@@ -1,5 +1,5 @@
 (ns thrive.core
-  (:use [thrive.actor :only (loop-actor, living-actors, alive?)])
+  (:use [thrive.actor :only (loop-actor, alive?)])
   (:require [thrive.human :only (Human)])
   (:import (thrive.human Human))
   (:require [thrive.city :only (City)])
@@ -20,18 +20,20 @@
 
 ;;;;;;; References ;;;;;;;
 
-(load "examples/d-double-world-pathfinding-blind-example")
+(load "examples/example1")
 
 (defn cleanup-dead
   "Removes dead actors in the world."
   []  
-  (dosync 
-    (alter world assoc :actors (filter #(alive? @%) (:actors @world)))))
+  (do
+    ;(println "Start cleanup of dead actors")
+    (dosync 
+      (ref-set actors (filter #(alive? @%) @actors)))))
 
 (defn live-world
   "Sets the actors in motion."
   []  
   (do
     (every 1000 cleanup-dead) ;; Clean the actors up every second. 
-    (doseq [actor (:actors @world)]
-      (send-off actor loop-actor world world-size))))
+    (doseq [actor @actors]
+      (send-off actor loop-actor actors world world-size))))

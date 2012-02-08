@@ -19,14 +19,12 @@
 
 (defn deliver-food
   [^City c, amount]
-  (do
-    (println "Got food")
-    (assoc c :food (+ (:food c) amount))))
+  (assoc c :food (+ (:food c) amount)))
 
 (defn ^City live-city
-  "A human first observers his surroundings than makes a move."
-  [^City c, actual-world] 
-  (decrease-food c 5))
+  "A city burns food"
+  [^City c] 
+  (decrease-food c 1))
 
 (defn is-alive?
   [^City c]
@@ -34,6 +32,6 @@
 
 (extend-type City
   Actor
-  (live [this world world-size] (live-city this (:cells @world)))
-  (interval [this] 30000)
+  (live [this actors world world-size] (live-city this))
+  (interval [this] 1000)
   (alive? [this] (is-alive? this)))

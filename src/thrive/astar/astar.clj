@@ -27,12 +27,7 @@
         h (euclidian-distance (let [curr (last seq)] [(:x curr) (:y curr)]) end)   
         f (+ g h)]
     f))
-
-(defn l-contains?
-  "A linear search trough a map"
-  [value map]
-  (if (some #(= value %) map) true (if (and (or (map? value) (vector? value) (list? value)) (some #(= value (val %)) map)) true false)))
-
+    
 (defn get-frontier
   [[x1 y1] [x2 y2] movement traversable world world-size]
   (sort-by :cost (into [] (map #(let [cost (cost [%] [x2 y2] traversable)] {:cost cost :cells [%]}) (find-moveable-cells [x1 y1] movement traversable world world-size)))))
