@@ -26,6 +26,11 @@
 
 ;(load "examples/d-world-with-bears")
 (load "examples/example1")
+;(load "examples/c-unknown-lava-world")
+;(load "examples/c-medium-unknown-world")
+;(load "examples/c-small-unknown-world")
+;(load "examples/c-unknown-through-middle-then-around")
+;(load "examples/c-small-move-around-sea")
 
 (defn cleanup-dead
   "Removes dead actors in the world."
