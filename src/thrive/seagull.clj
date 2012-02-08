@@ -43,9 +43,7 @@
   "A seagul moves to a random place, to annoy people. When it hits a human it promptly dies."
   [^Seagull s, ref-actors ref-world, world-size]
   (let [alive-seagull (alter-alive s ref-actors ref-world world-size)]
-    (if (:alive alive-seagull)
-      (move-seagull alive-seagull world-size)
-      alive-seagull)))
+    (move-seagull alive-seagull world-size)))
   
 (defn is-alive?
   "Seagull's are immortal beings sent from the future to annoy.
