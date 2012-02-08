@@ -104,4 +104,4 @@
 
 (defn share-knowledge-between
   [cellsA cellsB]
-  (map get-cell-with-most-time cellsA cellsB))
+  (vec (map get-cell-with-most-time cellsA cellsB)))
